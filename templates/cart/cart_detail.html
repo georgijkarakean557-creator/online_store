@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-item {
+        transition: box-shadow 0.2s, border-color 0.2s;
+        border: 1px solid #eee;
+        border-radius: 12px;
+    }
+    .cart-item.selected {
+        border-color: #212529;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+    .cart-item-img {
+        width: 100%;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 10px;
+        background: #f8f9fa;
+    }
+    .qty-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid #dee2e6;
+        background: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 600;
+        color: #212529;
+        text-decoration: none;
+    }
+    .qty-btn:hover {
+        background: #212529;
+        color: #fff;
+        border-color: #212529;
+    }
+        .qty-input {
+        width: 50px;
+        text-align: center;
+        border: none;
+        font-weight: 600;
+        background: transparent;
+        appearance: textfield;
+        -webkit-appearance: textfield;
+    }
+    .qty-input::-webkit-outer-spin-button,
+    .qty-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    
+    }
+    .summary-panel {
+        position: sticky;
+        top: 90px;
+    }
+    .summary-panel .card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .remove-btn {
+        color: #dc3545;
+        background: none;
+        border: none;
+        font-size: 0.9rem;
+        cursor: pointer;
+        padding: 0;
+        text-decoration: none;
+    }
+    .remove-btn:hover {
+        text-decoration: underline;
+    }
+    .form-check-input {
+        width: 22px;
+        height: 22px;
+        margin-top: 4px;
+        cursor: pointer;
+    }
+    .form-check-input:checked {
+        background-color: #212529;
+        border-color: #212529;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-4"><i class="fas fa-shopping-cart me-2"></i>Корзина</h2>
+
+{% if cart %}
+<div class="row g-4">
+    <!-- СПИСОК ТОВАРОВ -->
+    <div class="col-lg-8">
+
+        <!-- Панель управления выбором -->
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body py-3 d-flex align-items-center justify-content-between">
+                <div class="form-check d-flex align-items-center m-0">
+                    <input class="form-check-input me-2" type="checkbox" id="select-all" checked>
+                    <label class="form-check-label fw-semibold" for="select-all">
+                        Выбрать все
+                    </label>
+                </div>
+                <span class="text-muted small">
+                    Выбрано: <strong id="selected-count">0</strong> из {{ cart|length }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Товары -->
+        <div id="cart-items">
+            {% for item in cart %}
+            <div class="card cart-item mb-3"
+                 data-product-id="{{ item.product.id }}"
+                 data-price="{{ item.price }}"
+                 data-quantity="{{ item.quantity }}">
+                <div class="card-body">
+                    <div class="row g-3 align-items-center">
+
+                        <!-- Чекбокс -->
+                        <div class="col-auto">
+                            <input class="form-check-input item-checkbox" type="checkbox" checked
+                                   data-product-id="{{ item.product.id }}">
+                        </div>
+
+                        <!-- Картинка -->
+                        <div class="col-3 col-md-2">
+                            <a href="{{ item.product.get_absolute_url }}">
+                                {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" class="cart-item-img" alt="{{ item.product.name }}">
+                                {% else %}
+                                <img src="https://via.placeholder.com/150?text=Нет+фото" class="cart-item-img" alt="...">
+                                {% endif %}
+                            </a>
+                        </div>
+
+                        <!-- Информация и действия -->
+                        <div class="col">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                                <div class="flex-grow-1">
+                                    <a href="{{ item.product.get_absolute_url }}" class="text-decoration-none text-dark">
+                                        <h6 class="fw-bold mb-1">{{ item.product.name }}</h6>
+                                    </a>
+                                    {% if item.product.brand %}
+                                    <p class="small text-muted mb-1">{{ item.product.brand }}</p>
+                                    {% endif %}
+                                    <p class="fw-bold fs-5 mb-2 text-dark">{{ item.price }} ₽</p>
+
+                                    <!-- Количество + удалить -->
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <form method="post" action="{% url 'cart:cart_update' item.product.id %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="quantity" value="{{ item.quantity|add:'-1' }}">
+                                                <button type="submit" class="qty-btn" {% if item.quantity <= 1 %}disabled style="opacity:.4"{% endif %}>−</button>
+                                            </form>
+                                            <span class="qty-input">{{ item.quantity }}</span>
+                                            <form method="post" action="{% url 'cart:cart_update' item.product.id %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="quantity" value="{{ item.quantity|add:'1' }}">
+                                                <button type="submit" class="qty-btn">+</button>
+                                            </form>
+                                        </div>
+                                        <a href="{% url 'cart:cart_remove' item.product.id %}" class="remove-btn">
+                                            <i class="fas fa-trash-alt me-1"></i> Удалить
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Сумма -->
+                                <div class="text-end">
+                                    <p class="fw-bold fs-5 mb-0 item-total">{{ item.total_price }} ₽</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Кнопка продолжить -->
+        <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-secondary rounded-pill px-4 mb-4">
+            <i class="fas fa-arrow-left me-2"></i> Продолжить покупки
+        </a>
+    </div>
+
+    <!-- ПАНЕЛЬ ИТОГОВ -->
+    <div class="col-lg-4">
+        <div class="summary-panel">
+            <div class="card">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Ваш заказ</h5>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Товары (<span id="selected-count-2">0</span>)</span>
+                        <span id="selected-total">0 ₽</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="fw-bold fs-5">Итого:</span>
+                        <span class="fw-bold fs-4" id="grand-total">0 ₽</span>
+                    </div>
+
+                    <!-- Форма оформления выбранных товаров -->
+                    <form method="post" action="{% url 'cart:cart_checkout_selected' %}" id="checkout-form">
+                        {% csrf_token %}
+                        <div id="selected-inputs"></div>
+                        <button type="submit" class="btn btn-dark btn-lg w-100 rounded-pill shadow-sm" id="checkout-btn" disabled>
+                            <i class="fas fa-check-circle me-2"></i> Оформить выбранные
+                        </button>
+                    </form>
+
+                    <p class="text-muted small text-center mt-3 mb-0">
+                        <i class="fas fa-lock me-1"></i> Безопасная оплата
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- ПУСТАЯ КОРЗИНА -->
+<div class="text-center py-5">
+    <i class="fas fa-shopping-cart fa-5x text-muted mb-4"></i>
+    <h3 class="fw-bold mb-2">Корзина пуста</h3>
+    <p class="text-muted mb-4">Добавьте товары, чтобы оформить заказ</p>
+    <a href="{% url 'catalog:product_list' %}" class="btn btn-dark btn-lg rounded-pill px-5">
+        <i class="fas fa-shopping-bag me-2"></i> Перейти в каталог
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+{% if cart %}
+<script>
+    (function() {
+        var checkboxes = document.querySelectorAll('.item-checkbox');
+        var selectAll = document.getElementById('select-all');
+        var selectedCount = document.getElementById('selected-count');
+        var selectedCount2 = document.getElementById('selected-count-2');
+        var selectedTotal = document.getElementById('selected-total');
+        var grandTotal = document.getElementById('grand-total');
+        var checkoutBtn = document.getElementById('checkout-btn');
+        var selectedInputs = document.getElementById('selected-inputs');
+
+        var storageKey = 'cart_selected_ids';
+
+        // Загружаем сохранённые выборы
+        var saved = [];
+        try {
+            saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        } catch(e) { saved = []; }
+
+        // Применяем сохранённые
+        if (saved.length > 0) {
+            checkboxes.forEach(function(cb) {
+                var pid = cb.dataset.productId;
+                if (saved.indexOf(pid) === -1) {
+                    cb.checked = false;
+                }
+            });
+        }
+
+        function formatPrice(num) {
+            return num.toLocaleString('ru-RU') + ' ₽';
+        }
+
+        function updateSummary() {
+            var total = 0;
+            var count = 0;
+            var selectedIds = [];
+
+            checkboxes.forEach(function(cb) {
+                var item = cb.closest('.cart-item');
+                if (cb.checked) {
+                    var price = parseFloat(item.dataset.price);
+                    var qty = parseInt(item.dataset.quantity);
+                    total += price * qty;
+                    count += qty;
+                    selectedIds.push(cb.dataset.productId);
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+
+            selectedCount.textContent = count;
+            selectedCount2.textContent = count;
+            selectedTotal.textContent = formatPrice(total);
+            grandTotal.textContent = formatPrice(total);
+
+            // Активация кнопки
+            if (count > 0) {
+                checkoutBtn.disabled = false;
+            } else {
+                checkoutBtn.disabled = true;
+            }
+
+            // Обновляем скрытые поля для POST
+            selectedInputs.innerHTML = '';
+            selectedIds.forEach(function(id) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'selected_ids';
+                input.value = id;
+                selectedInputs.appendChild(input);
+            });
+
+            // Сохраняем в localStorage
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(selectedIds));
+            } catch(e) {}
+
+            // Синхронизируем "Выбрать все"
+            if (count === 0) {
+                selectAll.checked = false;
+                selectAll.indeterminate = false;
+            } else {
+                var allChecked = checkboxes.length === document.querySelectorAll('.item-checkbox:checked').length;
+                selectAll.checked = allChecked;
+                selectAll.indeterminate = !allChecked;
+            }
+        }
+
+        checkboxes.forEach(function(cb) {
+            cb.addEventListener('change', updateSummary);
+        });
+
+        selectAll.addEventListener('change', function() {
+            var checked = this.checked;
+            checkboxes.forEach(function(cb) {
+                cb.checked = checked;
+            });
+            updateSummary();
+        });
+
+        // Первичная инициализация
+        updateSummary();
+    })();
+</script>
+{% endif %}
+{% endblock %}

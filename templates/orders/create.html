@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Оформление заказа{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-shopping-bag text-success"></i> Оформление заказа
+                </h3>
+
+                <div class="row">
+                    <!-- Левая колонка: форма -->
+                    <div class="col-md-7">
+                        <form method="post">
+                            {% csrf_token %}
+
+                            <!-- === ВЫБОР ПУНКТА ВЫДАЧИ === -->
+                            <div class="mb-4">
+                                <label class="text-uppercase small text-muted fw-semibold d-block mb-2">
+                                    <i class="fas fa-truck me-1"></i> Способ доставки
+                                </label>
+
+                                {% if pickup_point %}
+                                <div class="alert alert-success d-flex justify-content-between align-items-center mb-0">
+                                    <div>
+                                        <i class="fas fa-map-marker-alt me-2"></i>
+                                        <strong>{{ pickup_point.name }}</strong><br>
+                                        <small class="text-muted">
+                                            {{ pickup_point.address }} · {{ pickup_point.get_carrier_display }}
+                                        </small>
+                                    </div>
+                                    <a href="{% url 'orders:pickup_point_map' %}" class="btn btn-sm btn-outline-dark rounded-pill">
+                                        Изменить
+                                    </a>
+                                </div>
+                                {% else %}
+                                <a href="{% url 'orders:pickup_point_map' %}" class="btn btn-outline-dark rounded-pill w-100">
+                                    <i class="fas fa-map-marker-alt me-2"></i> Выбрать пункт выдачи на карте
+                                </a>
+                                {% endif %}
+                            </div>
+
+                            <!-- Имя и Фамилия в одной строке -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_first_name" class="form-label">
+                                        <i class="fas fa-user"></i> Имя
+                                    </label>
+                                    <input type="text" name="first_name" id="id_first_name" class="form-control" 
+                                           placeholder="Имя" value="{{ form.first_name.value|default:'' }}" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_last_name" class="form-label">
+                                        <i class="fas fa-user"></i> Фамилия
+                                    </label>
+                                    <input type="text" name="last_name" id="id_last_name" class="form-control" 
+                                           placeholder="Фамилия" value="{{ form.last_name.value|default:'' }}" required>
+                                </div>
+                            </div>
+
+                            <!-- Email и Телефон в одной строке -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_email" class="form-label">
+                                        <i class="fas fa-envelope"></i> Email
+                                    </label>
+                                    <input type="email" name="email" id="id_email" class="form-control" 
+                                           placeholder="Email" value="{{ form.email.value|default:'' }}" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_phone" class="form-label">
+                                        <i class="fas fa-phone"></i> Телефон
+                                    </label>
+                                    <input type="text" name="phone" id="id_phone" class="form-control" 
+                                           placeholder="+7 (999) 123-45-67" value="{{ form.phone.value|default:'' }}" required>
+                                </div>
+                            </div>
+
+                            <!-- Адрес, Город, Индекс (три поля в ряд) -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_address" class="form-label">
+                                        <i class="fas fa-home"></i> Адрес
+                                    </label>
+                                    <input type="text" name="address" id="id_address" class="form-control" 
+                                           placeholder="Улица, дом, квартира" value="{{ form.address.value|default:'' }}" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="id_city" class="form-label">
+                                        <i class="fas fa-city"></i> Город
+                                    </label>
+                                    <input type="text" name="city" id="id_city" class="form-control" 
+                                           placeholder="Город" value="{{ form.city.value|default:'' }}" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="id_postal_code" class="form-label">
+                                        <i class="fas fa-mailbox"></i> Индекс
+                                    </label>
+                                    <input type="text" name="postal_code" id="id_postal_code" class="form-control" 
+                                           placeholder="Индекс" value="{{ form.postal_code.value|default:'' }}" required>
+                                </div>
+                            </div>
+
+                            <!-- Если пользователь авторизован и есть сохранённые адреса -->
+                            {% if user_addresses %}
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-address-book"></i> Выберите сохранённый адрес</label>
+                                <div class="row">
+                                    {% for address in user_addresses %}
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input type="radio" name="address_id" value="{{ address.id }}" id="addr{{ address.id }}" class="form-check-input">
+                                            <label for="addr{{ address.id }}" class="form-check-label">
+                                                {{ address.country }}, {{ address.city }}, {{ address.street }} {{ address.house }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <button type="submit" class="btn btn-success w-100 mt-2">
+                                <i class="fas fa-check-circle"></i> Подтвердить заказ
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Правая колонка: Сводка по заказу -->
+                    <div class="col-md-5">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-shopping-cart"></i> Ваш заказ</h5>
+                                <ul class="list-group list-group-flush">
+                                    {% for item in cart %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                        {{ item.product.name }} × {{ item.quantity }}
+                                        <span class="badge bg-primary rounded-pill">{{ item.total_price }} ₽</span>
+                                    </li>
+                                    {% endfor %}
+                                    <li class="list-group-item fw-bold bg-light">
+                                        Итого к оплате:
+                                        <span class="float-end">{{ cart.get_total_price }} ₽</span>
+                                    </li>
+                                </ul>
+
+                                {% if pickup_point %}
+                                <hr>
+                                <div class="small text-muted">
+                                    <i class="fas fa-truck me-1"></i> Доставка в пункт выдачи:<br>
+                                    <strong class="text-dark">{{ pickup_point.name }}</strong><br>
+                                    {{ pickup_point.address }}<br>
+                                    <span class="badge bg-{{ pickup_point.carrier_color }} mt-2">
+                                        {{ pickup_point.get_carrier_display }}
+                                    </span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <p class="text-muted mt-3 small">
+                            <i class="fas fa-lock"></i> Ваши данные защищены.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

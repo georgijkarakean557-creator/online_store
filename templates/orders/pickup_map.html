@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Выбор пункта выдачи{% endblock %}
+
+{% block extra_css %}
+<style>
+    .pickup-header {
+        background: linear-gradient(135deg, #212529 0%, #343a40 100%);
+        color: #fff;
+        padding: 40px 0;
+        border-radius: 0 0 20px 20px;
+        margin-bottom: 30px;
+    }
+    #map {
+        width: 100%;
+        height: 600px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+    .point-card {
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        border: 2px solid transparent;
+        border-radius: 12px;
+    }
+    .point-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    .point-card.selected {
+        border-color: #212529;
+        background-color: #f8f9fa;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .points-list {
+        max-height: 600px;
+        overflow-y: auto;
+        padding-right: 8px;
+    }
+    .points-list::-webkit-scrollbar { width: 6px; }
+    .points-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+    .carrier-badge {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+    }
+    .filter-chip {
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid #dee2e6;
+        border-radius: 20px;
+        padding: 6px 16px;
+        font-size: 0.85rem;
+        background: #fff;
+    }
+    .filter-chip:hover { border-color: #212529; }
+    .filter-chip.active { background: #212529; color: #fff; border-color: #212529; }
+    .sticky-panel { position: sticky; top: 90px; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="pickup-header text-center">
+    <div class="container">
+        <h1 class="fw-bold mb-2"><i class="fas fa-map-marker-alt me-2"></i>Выбор пункта выдачи</h1>
+        <p class="mb-0 text-white-50">Выберите удобный пункт на карте — мы доставим ваш заказ именно туда</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div id="map"></div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="sticky-panel">
+                <div class="mb-3">
+                    <label class="text-uppercase small text-muted fw-semibold mb-2">Транспортная компания</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        <div class="filter-chip active" data-carrier="all">Все</div>
+                        {% for slug, name in carriers %}
+                        <div class="filter-chip" data-carrier="{{ slug }}">{{ name }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <h6 class="fw-bold mb-3">
+                    <i class="fas fa-list me-2"></i>Найдено: <span id="points-count">{{ points|length }}</span>
+                </h6>
+
+                <div class="points-list" id="points-list">
+                    {% for point in points %}
+                    <div class="card point-card mb-2 border-0 shadow-sm"
+                         data-id="{{ point.id }}"
+                         data-carrier="{{ point.carrier }}"
+                         data-lat="{{ point.latitude }}"
+                         data-lng="{{ point.longitude }}">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-{{ point.carrier_color }} carrier-badge">{{ point.get_carrier_display }}</span>
+                                <i class="fas fa-map-marker-alt text-muted"></i>
+                            </div>
+                            <h6 class="fw-bold mb-1">{{ point.name }}</h6>
+                            <p class="small text-muted mb-1">
+                                <i class="fas fa-location-dot me-1"></i>{{ point.address }}
+                            </p>
+                            {% if point.work_time %}
+                            <p class="small text-muted mb-0">
+                                <i class="fas fa-clock me-1"></i>{{ point.work_time }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center py-4 text-muted">
+                            <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
+                            Пункты выдачи пока не добавлены.
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-3">
+                    <button id="select-btn" class="btn btn-dark btn-lg w-100 rounded-pill shadow-sm" disabled>
+                        <i class="fas fa-check me-2"></i> Выбрать этот пункт
+                    </button>
+                    <p id="selected-info" class="text-muted small text-center mt-2 mb-0"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="selected-point-id" value="">
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://api-maps.yandex.ru/2.1/?apikey=4f6677a5-fc61-4b24-8864-d13b13497b62&lang=ru_RU"></script>
+
+<script id="points-data" type="application/json">{{ points_json|safe }}</script>
+
+<script>
+    var pointsData = JSON.parse(document.getElementById('points-data').textContent);
+    var map, placemarks = [];
+
+    ymaps.ready(init);
+
+    function init() {
+        map = new ymaps.Map("map", {
+            center: [43.585, 39.720],
+            zoom: 12,
+            controls: ['zoomControl', 'fullscreenControl', 'geolocationControl']
+        });
+
+        pointsData.forEach(function(point) {
+            var balloonContent =
+                '<div style="font-family: sans-serif; min-width: 200px;">' +
+                '<div style="font-weight: 700; margin-bottom: 4px;">' + point.carrier + '</div>' +
+                '<div style="font-weight: 600; margin-bottom: 4px;">' + point.name + '</div>' +
+                '<div style="color: #666; font-size: 12px; margin-bottom: 4px;">' + point.address + '</div>' +
+                (point.phone ? '<div style="font-size: 12px;">📞 ' + point.phone + '</div>' : '') +
+                (point.work_time ? '<div style="font-size: 12px;">🕒 ' + point.work_time + '</div>' : '') +
+                '</div>';
+
+            var placemark = new ymaps.Placemark([point.lat, point.lng], {
+                balloonContent: balloonContent,
+                hintContent: point.name
+            }, {
+                preset: 'islands#darkBlueIcon'
+            });
+
+            placemark.events.add('click', function() {
+                selectPoint(point.id, false);
+            });
+
+            map.geoObjects.add(placemark);
+            placemarks.push({ id: point.id, placemark: placemark });
+        });
+
+        if (placemarks.length > 0) {
+            try {
+                map.setBounds(map.geoObjects.getBounds(), {
+                    checkZoomRange: true,
+                    zoomMargin: 60,
+                    duration: 300
+                });
+            } catch (e) {
+                map.setCenter([43.585, 39.720], 12);
+            }
+        }
+    }
+
+    function selectPoint(id, scrollCard) {
+        document.querySelectorAll('.point-card').forEach(function(card) {
+            card.classList.remove('selected');
+        });
+
+        var card = document.querySelector('.point-card[data-id="' + id + '"]');
+        if (card) {
+            card.classList.add('selected');
+            if (scrollCard !== false) {
+                var listContainer = document.getElementById('points-list');
+                var cardTop = card.offsetTop - listContainer.offsetTop;
+                listContainer.scrollTo({ top: cardTop - 10, behavior: 'smooth' });
+            }
+        }
+
+        document.getElementById('selected-point-id').value = id;
+        document.getElementById('select-btn').disabled = false;
+
+        var point = pointsData.find(p => p.id == id);
+        if (point) {
+            document.getElementById('selected-info').textContent = point.name + ' — ' + point.address;
+        }
+    }
+
+    document.querySelectorAll('.point-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+            var id = this.dataset.id;
+            var lat = parseFloat(this.dataset.lat);
+            var lng = parseFloat(this.dataset.lng);
+
+            selectPoint(id, false);
+            map.setCenter([lat, lng], 15);
+            placemarks.forEach(function(pm) {
+                if (pm.id == id) pm.placemark.balloon.open();
+            });
+        });
+    });
+
+    document.querySelectorAll('.filter-chip').forEach(function(chip) {
+        chip.addEventListener('click', function() {
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+
+            var carrier = this.dataset.carrier;
+            var visibleCount = 0;
+            var visibleBounds = [];
+
+            document.querySelectorAll('.point-card').forEach(function(card) {
+                var cardCarrier = card.dataset.carrier;
+                if (carrier === 'all' || cardCarrier === carrier) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            placemarks.forEach(function(pm) {
+                var point = pointsData.find(p => p.id == pm.id);
+                if (!point) return;
+                if (carrier === 'all' || point.carrier_slug === carrier) {
+                    pm.placemark.options.set('visible', true);
+                    visibleBounds.push([point.lat, point.lng]);
+                } else {
+                    pm.placemark.options.set('visible', false);
+                }
+            });
+
+            document.getElementById('points-count').textContent = visibleCount;
+
+            if (visibleBounds.length > 0) {
+                try {
+                    map.setBounds(visibleBounds, { checkZoomRange: true, zoomMargin: 60 });
+                } catch (e) {}
+            }
+        });
+    });
+
+    document.getElementById('select-btn').addEventListener('click', function() {
+        var pointId = document.getElementById('selected-point-id').value;
+        if (!pointId) return;
+
+        fetch('/orders/set-pickup-point/' + pointId + '/', {
+            method: 'GET',
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                var info = document.getElementById('selected-info');
+                info.innerHTML = '<i class="fas fa-check-circle text-success me-1"></i> Выбран: ' + data.name;
+
+                var btn = document.getElementById('select-btn');
+                btn.innerHTML = '<i class="fas fa-check-circle me-2"></i> Пункт сохранён';
+                btn.classList.remove('btn-dark');
+                btn.classList.add('btn-success');
+
+                setTimeout(function() {
+                    window.location.href = '/orders/create/';
+                }, 1000);
+            }
+        })
+        .catch(err => {
+            alert('Ошибка при сохранении. Попробуйте ещё раз.');
+        });
+    });
+</script>
+{% endblock %}

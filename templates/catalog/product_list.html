@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Каталог товаров{% endblock %}
+
+{% block extra_css %}
+<style>
+    .category-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        border-radius: 12px;
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+    .category-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .category-card i {
+        font-size: 1.8rem;
+        margin-bottom: 4px;
+        color: #6c757d;
+    }
+    .category-card img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 4px;
+    }
+    .register-link {
+        text-decoration: none;
+        color: #6c757d;
+        font-size: 0.85rem;
+        transition: color 0.2s;
+    }
+    .register-link:hover {
+        color: #0d6efd;
+        text-decoration: none;
+    }
+    .filter-block {
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Боковая панель -->
+    <div class="col-md-3">
+        <!-- Категории -->
+        <h4 class="fw-bold mb-3"><i class="fas fa-tags me-2"></i>Категории</h4>
+        <div class="row g-2 mb-4">
+            <div class="col-6">
+                <a href="{% url 'catalog:product_list' %}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm text-center p-2 category-card">
+                        <i class="fas fa-th-large fa-2x text-muted"></i>
+                        <span class="small fw-semibold">Все</span>
+                    </div>
+                </a>
+            </div>
+            {% for cat in categories %}
+            <div class="col-6">
+                <a href="{{ cat.get_absolute_url }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm text-center p-2 category-card">
+                        {% if cat.image %}
+                        <img src="{{ cat.image.url }}" class="rounded-circle mx-auto d-block">
+                        {% else %}
+                        <i class="fas fa-folder-open fa-2x text-secondary"></i>
+                        {% endif %}
+                        <span class="small fw-semibold text-truncate">{{ cat.name }}</span>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Фильтры -->
+        <h4 class="fw-bold mb-3"><i class="fas fa-filter me-2"></i>Фильтры</h4>
+        <form method="get" action="" id="filter-form">
+            {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+            {% if request.GET.sort %}<input type="hidden" name="sort" value="{{ request.GET.sort }}">{% endif %}
+
+            <!-- Пол -->
+            <div class="filter-block">
+                <label class="fw-semibold d-block mb-2">Пол</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" value="" id="gender_all" {% if not request.GET.gender %}checked{% endif %}>
+                    <label class="form-check-label" for="gender_all">Все</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" value="M" id="gender_m" {% if request.GET.gender == 'M' %}checked{% endif %}>
+                    <label class="form-check-label" for="gender_m">Мужской</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" value="F" id="gender_f" {% if request.GET.gender == 'F' %}checked{% endif %}>
+                    <label class="form-check-label" for="gender_f">Женский</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" value="U" id="gender_u" {% if request.GET.gender == 'U' %}checked{% endif %}>
+                    <label class="form-check-label" for="gender_u">Унисекс</label>
+                </div>
+            </div>
+
+            <!-- Цена -->
+            <div class="filter-block">
+                <label class="fw-semibold d-block mb-2">Цена, ₽</label>
+                <div class="d-flex gap-2">
+                    <input type="number" name="price_min" class="form-control form-control-sm" placeholder="от" value="{{ request.GET.price_min|default:'' }}">
+                    <input type="number" name="price_max" class="form-control form-control-sm" placeholder="до" value="{{ request.GET.price_max|default:'' }}">
+                </div>
+            </div>
+
+            <!-- Бренд -->
+            {% if brands %}
+            <div class="filter-block">
+                <label class="fw-semibold d-block mb-2">Бренд</label>
+                <select name="brand" class="form-select form-select-sm">
+                    <option value="">Все бренды</option>
+                    {% for b in brands %}
+                    <option value="{{ b }}" {% if request.GET.brand == b %}selected{% endif %}>{{ b }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            <!-- Цвет -->
+            {% if colors %}
+            <div class="filter-block">
+                <label class="fw-semibold d-block mb-2">Цвет</label>
+                <select name="color" class="form-select form-select-sm">
+                    <option value="">Все цвета</option>
+                    {% for c in colors %}
+                    <option value="{{ c }}" {% if request.GET.color == c %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-primary w-100 mb-2">
+                <i class="fas fa-filter"></i> Применить
+            </button>
+            <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-secondary w-100">
+                Сбросить
+            </a>
+        </form>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="col-md-9">
+        <h2><i class="fas fa-box-open"></i> Товары</h2>
+
+        <div class="row mb-4 align-items-end">
+            <div class="col-md-6">
+                <form method="get" action="{% url 'catalog:product_list' %}" class="d-flex">
+                    <input class="form-control me-2" type="search" name="q" placeholder="Поиск товаров..." value="{{ query|default:'' }}">
+                    <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                <form method="get" action="{% url 'catalog:product_list' %}" class="d-inline">
+                    <input type="hidden" name="q" value="{{ query|default:'' }}">
+                    {% for key, value in request.GET.items %}
+                        {% if key != 'sort' and key != 'q' and key != 'page' %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endif %}
+                    {% endfor %}
+                    <select name="sort" class="form-select d-inline w-auto" onchange="this.form.submit()">
+                        <option value="-created" {% if request.GET.sort == '-created' or not request.GET.sort %}selected{% endif %}>Новинки</option>
+                        <option value="price" {% if request.GET.sort == 'price' %}selected{% endif %}>Цена ↑</option>
+                        <option value="-price" {% if request.GET.sort == '-price' %}selected{% endif %}>Цена ↓</option>
+                        <option value="name" {% if request.GET.sort == 'name' %}selected{% endif %}>По названию</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        {% if query %}
+            <p class="text-muted">Результаты поиска по запросу: <strong>"{{ query }}"</strong></p>
+        {% endif %}
+
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 d-flex flex-column">
+                    <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-dark">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                        <img src="https://via.placeholder.com/300x250?text=Нет+изображения" class="card-img-top" alt="...">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            {% if product.brand %}
+                            <p class="card-text small text-muted mb-1"><i class="fas fa-tag"></i> {{ product.brand }}</p>
+                            {% endif %}
+                            <p class="small mb-2">
+                                {% if product.gender == 'M' %}<span class="badge bg-primary">Мужской</span>
+                                {% elif product.gender == 'F' %}<span class="badge bg-danger">Женский</span>
+                                {% else %}<span class="badge bg-secondary">Унисекс</span>{% endif %}
+                                {% if product.color %}<span class="badge bg-light text-dark border">{{ product.color }}</span>{% endif %}
+                            </p>
+                            <!-- Цена + рейтинг -->
+                            <p class="fw-bold mt-2 mb-1">{{ product.price }} ₽</p>
+                            {% if product.reviews_count > 0 %}
+                            <div class="d-flex align-items-center small">
+                                <i class="fas fa-star text-warning me-1"></i>
+                                <span class="fw-semibold me-1">{{ product.avg_rating|floatformat:1 }}</span>
+                                <span class="text-muted">· {{ product.reviews_count }} отзыв{{ product.reviews_count|pluralize:"ов,," }}</span>
+                            </div>
+                            {% else %}
+                            <div class="small text-muted">Нет отзывов</div>
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="card-footer bg-white mt-auto">
+                        {% if user.is_authenticated %}
+                            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="d-inline w-100">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-cart-plus"></i> В корзину</button>
+                            </form>
+                            <form action="{% url 'wishlist:wishlist_add' product.id %}" method="post" class="d-inline w-100 mt-2">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger w-100"><i class="fas fa-heart"></i> Избранное</button>
+                            </form>
+                        {% else %}
+                            <a href="{% url 'users:login' %}?next={{ request.path }}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-sign-in-alt"></i> Войдите, чтобы купить
+                            </a>
+                            <div class="text-center mt-2">
+                                <a href="{% url 'users:register' %}" class="register-link">или зарегистрируйтесь</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12"><p>По вашему запросу ничего не найдено.</p></div>
+            {% endfor %}
+        </div>
+
+        <!-- Пагинация -->
+        {% if products.has_other_pages %}
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if products.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ products.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"><i class="fas fa-chevron-left"></i></a>
+                </li>
+                {% endif %}
+                {% for num in products.paginator.page_range %}
+                {% if products.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if products.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ products.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"><i class="fas fa-chevron-right"></i></a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

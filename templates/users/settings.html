@@ -1,0 +1,18 @@
+{% extends 'users/profile_layout.html' %}
+
+{% block profile_title %}Настройки{% endblock %}
+
+{% block profile_content %}
+<h4><i class="fas fa-cog"></i> Настройки аккаунта</h4>
+<div class="list-group">
+    <a href="{% url 'users:edit_profile' %}" class="list-group-item list-group-item-action">
+        <i class="fas fa-user-edit"></i> Редактировать профиль
+    </a>
+    <a href="{% url 'users:change_password' %}" class="list-group-item list-group-item-action">
+        <i class="fas fa-key"></i> Сменить пароль
+    </a>
+    <a href="{% url 'users:address_list' %}" class="list-group-item list-group-item-action">
+        <i class="fas fa-address-book"></i> Управление адресами
+    </a>
+</div>
+{% endblock %}

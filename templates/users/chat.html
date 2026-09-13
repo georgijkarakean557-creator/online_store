@@ -1,0 +1,87 @@
+{% extends 'users/profile_layout.html' %}
+{% load static %}
+
+{% block profile_title %}Чат с поддержкой{% endblock %}
+
+{% block profile_content %}
+<h4><i class="fas fa-comment-dots text-primary"></i> Чат с поддержкой</h4>
+
+<div class="chat-box" id="chat-box" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 15px; background: #f9f9f9; margin-bottom: 15px;">
+    {% if history %}
+        {% for msg in history %}
+            {% if msg.is_bot %}
+                <div class="d-flex justify-content-start mb-3">
+                    <div class="bg-secondary text-white p-2 rounded" style="max-width: 80%; border-top-left-radius: 0;">
+                        <i class="fas fa-robot me-1"></i> {{ msg.message }}
+                        <div class="small text-light" style="font-size: 0.7rem;">{{ msg.created_at|date:"H:i" }}</div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="bg-primary text-white p-2 rounded" style="max-width: 80%; border-top-right-radius: 0;">
+                        {{ msg.message }}
+                        <div class="small text-light" style="font-size: 0.7rem;">{{ msg.created_at|date:"H:i" }}</div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p class="text-muted text-center">Напишите что-нибудь, чтобы начать диалог.</p>
+    {% endif %}
+    <div id="typing-indicator" style="display: none; font-style: italic; color: #888;">Бот печатает...</div>
+</div>
+
+<!-- Форма ввода -->
+<form method="post" id="chat-form">
+    {% csrf_token %}
+    <div class="input-group">
+        <input type="text" name="message" class="form-control" placeholder="Введите сообщение..." required id="chat-input">
+        <button type="submit" class="btn btn-primary" id="send-btn">
+            <i class="fas fa-paper-plane"></i> Отправить
+        </button>
+    </div>
+</form>
+
+<!-- Кнопки быстрых ответов -->
+<div class="quick-replies mt-3 d-flex flex-wrap gap-2">
+    <button class="btn btn-outline-primary btn-sm quick-btn" data-text="Привет">👋 Привет</button>
+    <button class="btn btn-outline-success btn-sm quick-btn" data-text="Цена на товары">💰 Цена</button>
+    <button class="btn btn-outline-info btn-sm quick-btn" data-text="Доставка">🚚 Доставка</button>
+    <button class="btn btn-outline-warning btn-sm quick-btn" data-text="Возврат">🔄 Возврат</button>
+    <button class="btn btn-outline-danger btn-sm quick-btn" data-text="Скидки и акции">🎯 Акции</button>
+    <button class="btn btn-outline-secondary btn-sm quick-btn" data-text="Как оформить заказ?">📦 Заказ</button>
+    <button class="btn btn-outline-primary btn-sm quick-btn" data-text="Способы оплаты">💳 Оплата</button>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Автоматическая прокрутка вниз при загрузке
+    window.onload = function() {
+        const chatBox = document.getElementById('chat-box');
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    // Обработчик для кнопок быстрых ответов
+    document.querySelectorAll('.quick-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const input = document.getElementById('chat-input');
+            input.value = this.dataset.text;
+            // Автоматически отправляем форму через 100ms
+            setTimeout(() => {
+                document.getElementById('chat-form').submit();
+            }, 100);
+        });
+    });
+
+    // Анимация "печатания" (можно добавить при отправке формы)
+    document.getElementById('chat-form').addEventListener('submit', function() {
+        const indicator = document.getElementById('typing-indicator');
+        indicator.style.display = 'block';
+        setTimeout(() => {
+            indicator.style.display = 'none';
+        }, 1500);
+    });
+</script>
+{% endblock %}

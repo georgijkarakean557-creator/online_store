@@ -1,0 +1,47 @@
+{% extends 'users/profile_layout.html' %}
+
+{% block profile_title %}Мои заказы{% endblock %}
+
+{% block profile_content %}
+<h4><i class="fas fa-list"></i> Мои заказы</h4>
+{% if orders %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>№ заказа</th>
+            <th>Дата</th>
+            <th>Сумма</th>
+            <th>Статус</th>
+            <th>Детали</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.created|date:"d.m.Y H:i" }}</td>
+            <td>{{ order.total_price }} ₽</td>
+            <td>
+                {% if order.paid %}
+                <span class="badge bg-success">Оплачен</span>
+                {% else %}
+                <span class="badge bg-warning">Ожидает оплаты</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'users:order_detail' order.id %}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-eye"></i>
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">У вас пока нет заказов.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted">У вас пока нет заказов.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'users/profile_layout.html' %}
+{% load static %}
+
+{% block profile_title %}Мои адреса{% endblock %}
+
+{% block profile_content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h4 class="fw-bold mb-0"><i class="fas fa-address-book me-2"></i>Мои адреса</h4>
+    <a href="{% url 'users:address_add' %}" class="btn btn-dark rounded-pill px-4">
+        <i class="fas fa-plus me-2"></i> Добавить адрес
+    </a>
+</div>
+
+<!-- КАРТА -->
+{% if addresses %}
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-0" style="border-radius: 12px; overflow: hidden;">
+        <div id="address-map" style="width: 100%; height: 400px;"></div>
+    </div>
+</div>
+{% endif %}
+
+<!-- СПИСОК АДРЕСОВ -->
+<div class="row g-3">
+    {% for address in addresses %}
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100 address-card" 
+             data-id="{{ address.id }}" 
+             data-lat="{{ address.latitude }}" 
+             data-lng="{{ address.longitude }}">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <h6 class="fw-bold mb-1">
+                            <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                            {{ address.name|default:"Адрес" }}
+                        </h6>
+                        {% if address.is_default %}
+                        <span class="badge bg-success">По умолчанию</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <p class="text-muted small mb-3">
+                    {{ address.country }}, {{ address.city }},<br>
+                    {{ address.street }} {{ address.house }}{% if address.apartment %}, кв. {{ address.apartment }}{% endif %}<br>
+                    {% if address.postal_code %}Индекс: {{ address.postal_code }}{% endif %}
+                </p>
+                {% if not address.latitude %}
+                <p class="small text-warning mb-2">
+                    <i class="fas fa-exclamation-triangle"></i> Нет координат — не отображается на карте
+                </p>
+                {% endif %}
+                <div class="d-flex gap-2">
+                    <a href="{% url 'users:address_edit' address.id %}" class="btn btn-sm btn-outline-dark rounded-pill flex-fill">
+                        <i class="fas fa-edit"></i> Изменить
+                    </a>
+                    <a href="{% url 'users:address_delete' address.id %}" class="btn btn-sm btn-outline-danger rounded-pill flex-fill">
+                        <i class="fas fa-trash"></i> Удалить
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5 text-muted">
+                <i class="fas fa-map-marked-alt fa-3x mb-3 d-block"></i>
+                <p class="mb-3">У вас пока нет сохранённых адресов</p>
+                <a href="{% url 'users:address_add' %}" class="btn btn-dark rounded-pill px-4">
+                    <i class="fas fa-plus me-2"></i> Добавить первый адрес
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script id="addresses-data" type="application/json">{{ addresses_json|safe }}</script>
+
+{% endblock %}
+
+{% block extra_js %}
+{% if addresses %}
+<script src="https://api-maps.yandex.ru/2.1/?apikey=4f6677a5-fc61-4b24-8864-d13b13497b62&lang=ru_RU"></script>
+<script>
+    var addressesData = JSON.parse(document.getElementById('addresses-data').textContent);
+
+    ymaps.ready(function() {
+        var map = new ymaps.Map("address-map", {
+            center: [43.585, 39.720],
+            zoom: 10,
+            controls: ['zoomControl', 'fullscreenControl', 'geolocationControl']
+        });
+
+        var placemarks = [];
+        var bounds = [];
+
+        addressesData.forEach(function(addr) {
+            if (!addr.lat || !addr.lng) return;
+
+            var balloonContent =
+                '<div style="font-family: sans-serif; min-width: 180px;">' +
+                '<div style="font-weight: 700; margin-bottom: 4px;">' + addr.name + '</div>' +
+                '<div style="color: #666; font-size: 12px;">' +
+                    addr.city + ', ' + addr.street + ' ' + addr.house +
+                    (addr.apartment ? ', кв. ' + addr.apartment : '') +
+                '</div>' +
+                (addr.is_default ? '<div style="color: #198754; font-size: 12px; margin-top: 4px;">✓ По умолчанию</div>' : '') +
+                '</div>';
+
+            var placemark = new ymaps.Placemark([addr.lat, addr.lng], {
+                balloonContent: balloonContent,
+                hintContent: addr.name
+            }, {
+                preset: addr.is_default ? 'islands#greenIcon' : 'islands#blueIcon'
+            });
+
+            map.geoObjects.add(placemark);
+            placemarks.push({ id: addr.id, placemark: placemark });
+            bounds.push([addr.lat, addr.lng]);
+        });
+
+        if (bounds.length > 0) {
+            map.setBounds(map.geoObjects.getBounds(), { checkZoomRange: true, zoomMargin: 50 });
+        }
+
+        // Клик по карточке адреса
+        document.querySelectorAll('.address-card').forEach(function(card) {
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('a')) return;
+
+                var id = parseInt(this.dataset.id);
+                var lat = parseFloat(this.dataset.lat);
+                var lng = parseFloat(this.dataset.lng);
+
+                if (lat && lng && map) {
+                    document.getElementById('address-map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    map.setCenter([lat, lng], 15);
+                    placemarks.forEach(function(pm) {
+                        if (pm.id === id) {
+                            pm.placemark.balloon.open();
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endif %}
+{% endblock %}

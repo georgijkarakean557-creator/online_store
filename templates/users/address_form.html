@@ -1,0 +1,180 @@
+{% extends 'users/profile_layout.html' %}
+{% load static %}
+
+{% block profile_title %}{{ title }}{% endblock %}
+
+{% block profile_content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{% url 'users:address_list' %}" class="btn btn-sm btn-outline-secondary rounded-pill me-3">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <h4 class="fw-bold mb-0">
+        <i class="fas fa-map-marker-alt me-2"></i>{{ title }}
+    </h4>
+</div>
+
+<div class="row g-4">
+    <!-- ФОРМА -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form method="post" id="address-form">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Название</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Страна</label>
+                            {{ form.country }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Город</label>
+                            {{ form.city }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Индекс</label>
+                            {{ form.postal_code }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label">Улица</label>
+                            {{ form.street }}
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label class="form-label">Дом</label>
+                            {{ form.house }}
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label class="form-label">Кв./офис</label>
+                            {{ form.apartment }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Широта</label>
+                            {{ form.latitude }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Долгота</label>
+                            {{ form.longitude }}
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-3">
+                        <i class="fas fa-info-circle"></i>
+                        Вы можете заполнить поля вручную или выбрать пункт на карте справа — координаты и адрес заполнятся автоматически.
+                    </p>
+
+                    <div class="form-check mb-4">
+                        {{ form.is_default }}
+                        <label class="form-check-label" for="{{ form.is_default.id_for_label }}">
+                            Сделать адресом по умолчанию
+                        </label>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'users:address_list' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                            <i class="fas fa-arrow-left me-2"></i> Отмена
+                        </a>
+                        <button type="submit" class="btn btn-dark rounded-pill px-4">
+                            <i class="fas fa-save me-2"></i> Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- КАРТА -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-3">
+                <h6 class="fw-bold mb-2"><i class="fas fa-map-marker-alt me-2"></i>Выберите пункт на карте</h6>
+                <p class="small text-muted mb-3">Кликните по метке — данные автоматически заполнятся в форме</p>
+                <div id="address-pickup-map" style="width: 100%; height: 500px; border-radius: 12px; overflow: hidden;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="pickup-points-data" type="application/json">{{ points_json|safe }}</script>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://api-maps.yandex.ru/2.1/?apikey=4f6677a5-fc61-4b24-8864-d13b13497b62&lang=ru_RU"></script>
+<script>
+    var pickupPoints = JSON.parse(document.getElementById('pickup-points-data').textContent);
+
+    ymaps.ready(function() {
+        var map = new ymaps.Map("address-pickup-map", {
+            center: [43.585, 39.720],
+            zoom: 11,
+            controls: ['zoomControl', 'fullscreenControl', 'geolocationControl']
+        });
+
+        pickupPoints.forEach(function(point) {
+            var placemark = new ymaps.Placemark([point.lat, point.lng], {
+                balloonContent:
+                    '<div style="font-family: sans-serif; min-width: 180px;">' +
+                    '<div style="font-weight: 700;">' + point.carrier + '</div>' +
+                    '<div style="font-weight: 600; margin: 4px 0;">' + point.name + '</div>' +
+                    '<div style="color: #666; font-size: 12px;">' + point.address + '</div>' +
+                    '<div style="margin-top: 6px; color: #0d6efd; font-size: 12px;">Кликните, чтобы выбрать</div>' +
+                    '</div>',
+                hintContent: point.name
+            }, {
+                preset: 'islands#darkBlueIcon'
+            });
+
+            placemark.events.add('click', function() {
+                fillAddressForm(point);
+            });
+
+            map.geoObjects.add(placemark);
+        });
+
+        if (pickupPoints.length > 0) {
+            try {
+                map.setBounds(map.geoObjects.getBounds(), { checkZoomRange: true, zoomMargin: 60 });
+            } catch (e) {}
+        }
+    });
+
+    function fillAddressForm(point) {
+        var cityField = document.getElementById('id_city');
+        var streetField = document.getElementById('id_street');
+        var houseField = document.getElementById('id_house');
+        var latField = document.getElementById('id_latitude');
+        var lngField = document.getElementById('id_longitude');
+        var nameField = document.getElementById('id_name');
+
+        if (cityField) cityField.value = point.city || '';
+        if (streetField) streetField.value = point.street || point.address || '';
+        if (houseField) houseField.value = '1';
+        if (latField) latField.value = point.lat;
+        if (lngField) lngField.value = point.lng;
+        if (nameField && !nameField.value) nameField.value = point.name;
+
+        if (window.innerWidth < 992) {
+            document.getElementById('address-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        var note = document.createElement('div');
+        note.className = 'alert alert-success mt-2 py-2 px-3 small';
+        note.innerHTML = '<i class="fas fa-check-circle me-1"></i> Выбран: ' + point.name;
+        var existing = document.querySelector('.alert-success.mt-2');
+        if (existing) existing.remove();
+        document.getElementById('address-form').prepend(note);
+        setTimeout(function() { note.remove(); }, 3000);
+    }
+</script>
+{% endblock %}

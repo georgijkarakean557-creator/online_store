@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="row g-5 align-items-start">
+    <!-- Левая колонка: изображение -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="card-body p-0 text-center bg-light">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.name }}" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+                {% else %}
+                <img src="https://via.placeholder.com/600x400?text=Нет+изображения" class="img-fluid" alt="...">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Правая колонка: информация -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-lg-5">
+                <div class="mb-2 text-muted small text-uppercase tracking-wide">
+                    <a href="{{ product.category.get_absolute_url }}" class="text-decoration-none text-muted">{{ product.category.name }}</a>
+                </div>
+
+                <h1 class="fw-bold display-6">{{ product.name }}</h1>
+
+                <!-- Рейтинг -->
+                {% if reviews_count > 0 %}
+                <div class="d-flex align-items-center mt-2">
+                    <div class="text-warning me-2">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= avg_rating %}
+                                <i class="fas fa-star"></i>
+                            {% elif forloop.counter <= avg_rating|add:"0.5" %}
+                                <i class="fas fa-star-half-alt"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <span class="text-muted small">{{ avg_rating|floatformat:1 }} из 5 ({{ reviews_count }} отзыв{{ reviews_count|pluralize:"ов,," }})</span>
+                </div>
+                {% endif %}
+
+                <hr class="my-4">
+
+                <!-- Характеристики -->
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-3">
+                            <span class="text-uppercase small text-muted d-block">Бренд</span>
+                            <span class="fw-semibold">{{ product.brand|default:"—" }}</span>
+                        </p>
+                        <p class="mb-3">
+                            <span class="text-uppercase small text-muted d-block">Состав</span>
+                            <span class="fw-semibold">{{ product.composition|default:"—" }}</span>
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="mb-3">
+                            <span class="text-uppercase small text-muted d-block">Пол</span>
+                            <span class="fw-semibold">
+                                {% if product.gender == 'M' %}Мужской{% elif product.gender == 'F' %}Женский{% else %}Унисекс{% endif %}
+                            </span>
+                        </p>
+                        <p class="mb-3">
+                            <span class="text-uppercase small text-muted d-block">Цвет</span>
+                            <span class="fw-semibold">{{ product.color|default:"—" }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <span class="display-5 fw-bold text-dark">{{ product.price }} ₽</span>
+                    {% if product.available %}
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle px-3 py-2 rounded-pill">В наличии</span>
+                    {% else %}
+                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle px-3 py-2 rounded-pill">Нет в наличии</span>
+                    {% endif %}
+                </div>
+
+                <div class="mt-4">
+                    <p class="text-muted">{{ product.description|linebreaks }}</p>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    {% if user.is_authenticated %}
+                        <form action="{% url 'cart:cart_add' product.id %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-dark btn-lg px-5 rounded-pill shadow-sm">
+                                <i class="fas fa-cart-plus me-2"></i> В корзину
+                            </button>
+                        </form>
+                        <form action="{% url 'wishlist:wishlist_add' product.id %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-secondary btn-lg px-5 rounded-pill shadow-sm">
+                                <i class="fas fa-heart me-2"></i> Избранное
+                            </button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'users:login' %}?next={{ request.path }}" class="btn btn-dark btn-lg px-5 rounded-pill shadow-sm">
+                            <i class="fas fa-sign-in-alt me-2"></i> Войдите, чтобы купить
+                        </a>
+                    {% endif %}
+                </div>
+
+                <p class="mt-4"><a href="{% url 'catalog:product_list' %}" class="text-decoration-none text-muted"><i class="fas fa-arrow-left me-2"></i> Вернуться в каталог</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- БЛОК ОТЗЫВОВ -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 class="fw-bold mb-4">Отзывы покупателей</h3>
+
+        <!-- Средний рейтинг (крупно) -->
+        {% if reviews_count > 0 %}
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body text-center">
+                <div class="display-3 fw-bold text-dark">{{ avg_rating|floatformat:1 }}</div>
+                <div class="text-warning fs-4 mb-1">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= avg_rating %}
+                            <i class="fas fa-star"></i>
+                        {% elif forloop.counter <= avg_rating|add:"0.5" %}
+                            <i class="fas fa-star-half-alt"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="text-muted small">На основе {{ reviews_count }} отзыв{{ reviews_count|pluralize:"ов,," }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Форма отзыва -->
+        {% if user.is_authenticated %}
+            {% if user_can_review %}
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4">Оставить отзыв</h5>
+                        <form method="post" action="{% url 'catalog:add_review' product.slug %}">
+                            {% csrf_token %}
+
+                            <!-- Оценка -->
+                            <div class="mb-3">
+                                <label class="text-uppercase small text-muted d-block mb-2">Оценка</label>
+                                {{ review_form.rating }}
+                            </div>
+
+                            <!-- Отзыв -->
+                            <div class="mb-3">
+                                <label class="text-uppercase small text-muted d-block mb-2">Отзыв (необязательно)</label>
+                                {{ review_form.text }}
+                            </div>
+
+                            <button type="submit" class="btn btn-dark rounded-pill px-4">
+                                <i class="fas fa-paper-plane me-2"></i> Отправить
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% elif user_review %}
+                <div class="alert alert-info border-0 shadow-sm">
+                    <i class="fas fa-info-circle me-2"></i> Вы уже оставили отзыв на этот товар.
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body text-center py-4">
+                    <p class="text-muted mb-3">Чтобы оставить отзыв, войдите в аккаунт.</p>
+                    <a href="{% url 'users:login' %}?next={{ request.path }}" class="btn btn-dark rounded-pill px-4">
+                        <i class="fas fa-sign-in-alt me-2"></i> Войти
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Список отзывов -->
+        {% if product.reviews.all %}
+            {% for review in product.reviews.all %}
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <span class="fw-bold">{{ review.user.username }}</span>
+                            <div class="text-warning small mt-1">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <small class="text-muted">{{ review.created|date:"d.m.Y H:i" }}</small>
+                    </div>
+                    <!-- ИСПРАВЛЕНО: если текста нет — "Без комментария" -->
+                    {% if review.text %}
+                        <p class="mb-0 text-muted">{{ review.text }}</p>
+                    {% else %}
+                        <p class="mb-0 text-muted fst-italic">Без комментария</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-4 text-muted">
+                    Отзывов пока нет. Будьте первым!
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Похожие товары -->
+{% if similar_products %}
+<hr class="my-5">
+<h3 class="h5 fw-bold text-uppercase tracking-wide">Похожие товары</h3>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mt-2">
+    {% for similar in similar_products %}
+    <div class="col">
+        <div class="card h-100 border-0 shadow-sm">
+            <a href="{{ similar.get_absolute_url }}" class="text-decoration-none text-dark">
+                <img src="{% if similar.image %}{{ similar.image.url }}{% else %}https://via.placeholder.com/300x200?text=Нет+изображения{% endif %}" class="card-img-top" alt="{{ similar.name }}" style="height: 180px; object-fit: cover;">
+                <div class="card-body">
+                    <h6 class="card-title">{{ similar.name }}</h6>
+                    <p class="fw-bold text-dark">{{ similar.price }} ₽</p>
+                </div>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

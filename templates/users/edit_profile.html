@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Редактирование профиля{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-user-edit text-primary"></i> Редактирование профиля
+                </h3>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Поля пользователя (имя, фамилия, email) -->
+                    <div class="mb-3">
+                        <label for="id_first_name" class="form-label"><i class="fas fa-user"></i> Имя</label>
+                        <input type="text" name="first_name" id="id_first_name" class="form-control" 
+                               value="{{ user_form.first_name.value|default:'' }}" placeholder="Имя">
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_last_name" class="form-label"><i class="fas fa-user"></i> Фамилия</label>
+                        <input type="text" name="last_name" id="id_last_name" class="form-control" 
+                               value="{{ user_form.last_name.value|default:'' }}" placeholder="Фамилия">
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" name="email" id="id_email" class="form-control" 
+                               value="{{ user_form.email.value|default:'' }}" placeholder="Email">
+                    </div>
+
+                    <hr>
+
+                    <!-- Поля профиля (аватар, телефон) -->
+                    <div class="mb-3">
+                        <label for="id_avatar" class="form-label"><i class="fas fa-image"></i> Аватар</label>
+                        <input type="file" name="avatar" id="id_avatar" class="form-control">
+                        {% if profile_form.instance.avatar %}
+                            <div class="mt-2">
+                                <img src="{{ profile_form.instance.avatar.url }}" alt="Аватар" style="max-width: 100px; max-height: 100px; border-radius: 50%;">
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_phone" class="form-label"><i class="fas fa-phone"></i> Телефон</label>
+                        <input type="text" name="phone" id="id_phone" class="form-control" 
+                               value="{{ profile_form.phone.value|default:'' }}" placeholder="+7 (999) 123-45-67">
+                    </div>
+
+                    <!-- Кнопки -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'users:profile' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Отмена
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

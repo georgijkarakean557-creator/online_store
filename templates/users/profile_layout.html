@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% block profile_title %}Профиль{% endblock %}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Боковое меню -->
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title text-center">
+                    <i class="fas fa-user-circle fa-3x text-primary"></i>
+                </h5>
+                <p class="text-center fw-bold">{{ user.username }}</p>
+                <hr>
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" 
+                           href="{% url 'users:profile' %}">
+                            <i class="fas fa-box"></i> Мои заказы
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'wishlist_detail' %}active{% endif %}" 
+                           href="{% url 'wishlist:wishlist_detail' %}">
+                            <i class="fas fa-heart"></i> Избранное
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'settings' %}active{% endif %}" 
+                           href="{% url 'users:settings' %}">
+                            <i class="fas fa-cog"></i> Настройки
+                        </a>
+                    </li>
+                    <!-- НОВЫЙ ПУНКТ -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'chat' %}active{% endif %}" 
+                           href="{% url 'users:chat' %}">
+                            <i class="fas fa-comment-dots"></i> Чат с поддержкой
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="col-md-9">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% block profile_content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
