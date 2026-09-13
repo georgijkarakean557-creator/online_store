@@ -3,6 +3,7 @@ Django settings for core project.
 """
 
 import os
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 import dj_database_url
 from pathlib import Path
 
@@ -77,12 +78,27 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
-# Database
-# RelaxDev: SSL не поддерживается внутренней сетью — ssl_require=False
+# ===== DATABASE =====
+# Очищаем DATABASE_URL от параметров, которые не понимает psycopg2 (connection_limit, sslmode и т.д.)
+
+_db_url = os.environ.get('DATABASE_URL', '')
+
+if _db_url:
+    parsed = urlparse(_db_url)
+    query_params = parse_qs(parsed.query)
+
+    # Удаляем параметры, несовместимые с psycopg2 / RelaxDev
+    for param in ['connection_limit', 'sslmode', 'ssl', 'channel_binding']:
+        query_params.pop(param, None)
+
+    new_query = urlencode(query_params, doseq=True)
+    cleaned_url = urlunparse(parsed._replace(query=new_query))
+else:
+    cleaned_url = 'sqlite:///' + str(BASE_DIR / 'db.sqlite3')
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+    'default': dj_database_url.parse(
+        cleaned_url,
         conn_max_age=600,
         ssl_require=False,
     )
