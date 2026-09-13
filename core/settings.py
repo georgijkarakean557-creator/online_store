@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # ===== DATABASE =====
-# Очищаем DATABASE_URL от параметров, которые не понимает psycopg2 (connection_limit, sslmode и т.д.)
+# Очищаем DATABASE_URL от параметров, которые не понимает psycopg2
 
 _db_url = os.environ.get('DATABASE_URL', '')
 
@@ -87,8 +87,13 @@ if _db_url:
     parsed = urlparse(_db_url)
     query_params = parse_qs(parsed.query)
 
-    # Удаляем параметры, несовместимые с psycopg2 / RelaxDev
-    for param in ['connection_limit', 'sslmode', 'ssl', 'channel_binding']:
+    # Удаляем все параметры, несовместимые с psycopg2
+    # (RelaxDev добавляет их для Node.js, а Python-драйвер их не понимает)
+    for param in [
+        'connection_limit', 'pool_timeout', 'sslmode', 'ssl',
+        'channel_binding', 'pgbouncer', 'statement_cache_size',
+        'application_name',
+    ]:
         query_params.pop(param, None)
 
     new_query = urlencode(query_params, doseq=True)
