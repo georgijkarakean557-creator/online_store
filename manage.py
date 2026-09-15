@@ -19,13 +19,12 @@ def main():
 
     # === АВТОМАТИЧЕСКИЕ ДЕЙСТВИЯ ПРИ ЗАПУСКЕ runserver ===
     if len(sys.argv) > 1 and sys.argv[1] == 'runserver':
-        # 1. Инициализируем Django (без этого apps не загружены)
         import django
         django.setup()
 
         from django.core.management import call_command
 
-        # 2. Применяем миграции
+        # 1. Миграции
         try:
             print('[auto] Applying migrations...')
             call_command('migrate', interactive=False, verbosity=1)
@@ -33,7 +32,7 @@ def main():
         except Exception as e:
             print(f'[auto-migrate] Ошибка: {e}')
 
-        # 3. Создаём суперпользователя
+        # 2. Суперпользователь
         try:
             from django.contrib.auth import get_user_model
             User = get_user_model()
@@ -48,7 +47,19 @@ def main():
         except Exception as e:
             print(f'[auto-superuser] Ошибка: {e}')
 
-        # 4. Собираем статику
+        # 3. Загрузка данных из data.json (если есть товары не загружены)
+        try:
+            from catalog.models import Product
+            if Product.objects.count() == 0 and os.path.exists('data.json'):
+                print('[auto] Загружаю data.json...')
+                call_command('loaddata', 'data.json', verbosity=1)
+                print(f'[auto] Данные загружены. Товаров: {Product.objects.count()}')
+            else:
+                print(f'[auto] Товаров уже в базе: {Product.objects.count()}')
+        except Exception as e:
+            print(f'[auto-loaddata] Ошибка: {e}')
+
+        # 4. Статика
         try:
             print('[auto] Collecting static...')
             call_command('collectstatic', interactive=False, verbosity=0)

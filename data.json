@@ -1,0 +1,1302 @@
+[
+{
+  "model": "admin_interface.theme",
+  "pk": 1,
+  "fields": {
+    "name": "Django",
+    "active": true,
+    "title": "Администрирование Django",
+    "title_color": "#F5DD5D",
+    "title_visible": true,
+    "logo": "",
+    "logo_color": "#FFFFFF",
+    "logo_max_width": 400,
+    "logo_max_height": 100,
+    "logo_visible": true,
+    "favicon": "",
+    "env_name": "",
+    "env_color": "#E74C3C",
+    "env_visible_in_header": true,
+    "env_visible_in_favicon": true,
+    "language_chooser_active": true,
+    "language_chooser_control": "default-select",
+    "language_chooser_display": "code",
+    "css_header_background_color": "#0C4B33",
+    "css_header_text_color": "#44B78B",
+    "css_header_link_color": "#FFFFFF",
+    "css_header_link_hover_color": "#C9F0DD",
+    "css_module_background_color": "#44B78B",
+    "css_module_background_selected_color": "#FFFFCC",
+    "css_module_text_color": "#FFFFFF",
+    "css_module_link_color": "#FFFFFF",
+    "css_module_link_selected_color": "#FFFFFF",
+    "css_module_link_hover_color": "#C9F0DD",
+    "css_module_rounded_corners": true,
+    "css_generic_link_color": "#0C3C26",
+    "css_generic_link_hover_color": "#156641",
+    "css_generic_link_active_color": "#29B864",
+    "css_save_button_background_color": "#0C4B33",
+    "css_save_button_background_hover_color": "#0C3C26",
+    "css_save_button_text_color": "#FFFFFF",
+    "css_delete_button_background_color": "#BA2121",
+    "css_delete_button_background_hover_color": "#A41515",
+    "css_delete_button_text_color": "#FFFFFF",
+    "related_modal_active": true,
+    "related_modal_background_color": "#000000",
+    "related_modal_background_opacity": "0.3",
+    "related_modal_rounded_corners": true,
+    "related_modal_close_button_visible": true,
+    "list_filter_highlight": true,
+    "list_filter_dropdown": true,
+    "list_filter_sticky": true,
+    "list_filter_removal_links": true,
+    "foldable_apps": true,
+    "show_fieldsets_as_tabs": false,
+    "show_inlines_as_tabs": false,
+    "collapsible_stacked_inlines": false,
+    "collapsible_stacked_inlines_collapsed": true,
+    "collapsible_tabular_inlines": false,
+    "collapsible_tabular_inlines_collapsed": true,
+    "recent_actions_visible": true,
+    "form_actions_sticky": true,
+    "form_submit_sticky": true,
+    "form_pagination_sticky": true
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$obDId43UXzAvj32oMI3SlG$3VFv6Av3xDWJzueJBBqeQlEErCo6AtGrrcqSemkDCgQ=",
+    "last_login": "2026-09-13T12:06:13.871Z",
+    "is_superuser": true,
+    "username": "Admin",
+    "first_name": "гео",
+    "last_name": "",
+    "email": "georgijkarakean557@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-07-28T20:04:00.500Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 1,
+  "fields": {
+    "name": "Обувь",
+    "slug": "Shoes",
+    "description": "",
+    "image": "categories/obyv-avatarka-sait.jpg"
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 2,
+  "fields": {
+    "name": "Кепки",
+    "slug": "caps",
+    "description": "",
+    "image": "categories/kepka-avatarka-sait.jpg"
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 3,
+  "fields": {
+    "name": "Худи",
+    "slug": "hudi",
+    "description": "",
+    "image": "categories/hudi-avatarka-sait.jpg"
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 4,
+  "fields": {
+    "name": "Джинсы",
+    "slug": "dzhinsy",
+    "description": "",
+    "image": "categories/jinsy-avatarka-sait.jpg"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 5,
+  "fields": {
+    "category": 2,
+    "name": "Кепка Loro Piana (Синий)",
+    "slug": "loro-piana-sinij",
+    "description": "loro piana \r\nлюкс копия",
+    "price": "1500.00",
+    "image": "products/лоро_пиана_синий.jpg",
+    "available": true,
+    "created": "2026-07-29T19:48:07.631Z",
+    "updated": "2026-07-29T19:59:12.577Z",
+    "brand": "",
+    "composition": "",
+    "gender": "U",
+    "color": ""
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 6,
+  "fields": {
+    "category": 2,
+    "name": "Кепка Loro Piana (Черный)",
+    "slug": "loro-piana-chernyj",
+    "description": "loro piana (черный)\r\nлюкс копия",
+    "price": "1500.00",
+    "image": "products/loropianablack.jpg",
+    "available": true,
+    "created": "2026-07-29T19:53:10.472Z",
+    "updated": "2026-07-29T19:56:36.929Z",
+    "brand": "",
+    "composition": "",
+    "gender": "U",
+    "color": ""
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 7,
+  "fields": {
+    "category": 2,
+    "name": "Кепка Loro Piana (Малиново-Красный)",
+    "slug": "loro-piana-krasnyj",
+    "description": "хлопок 50%; полиэстер 50%\r\nБейсболка с защитой от дождя",
+    "price": "1500.00",
+    "image": "products/loro_piana_red.jpg",
+    "available": true,
+    "created": "2026-07-29T19:54:40.983Z",
+    "updated": "2026-07-29T19:56:11.926Z",
+    "brand": "",
+    "composition": "",
+    "gender": "U",
+    "color": ""
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 8,
+  "fields": {
+    "category": 2,
+    "name": "Кепка Loro Piana (Хаки)",
+    "slug": "kepka-loro-piana-haki",
+    "description": "хлопок 50%; полиэстер 50%\r\nБейсболка с защитой от дождя",
+    "price": "1500.00",
+    "image": "products/лоро_пиана_хаки.jpg",
+    "available": true,
+    "created": "2026-07-29T20:00:54.073Z",
+    "updated": "2026-07-29T20:00:54.073Z",
+    "brand": "",
+    "composition": "",
+    "gender": "U",
+    "color": ""
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 9,
+  "fields": {
+    "category": 2,
+    "name": "Кепка Loro Piana (Коричневый)",
+    "slug": "kepka-loro-piana-korichnevyj",
+    "description": "хлопок 50%; полиэстер 50%\r\nБейсболка с защитой от дождя",
+    "price": "1500.00",
+    "image": "products/лоро_пиана_коричневый.jpg",
+    "available": true,
+    "created": "2026-07-29T20:03:15.527Z",
+    "updated": "2026-07-29T20:52:10.806Z",
+    "brand": "",
+    "composition": "",
+    "gender": "U",
+    "color": ""
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 10,
+  "fields": {
+    "category": 2,
+    "name": "Кепка Loro Piana (Индиго)",
+    "slug": "kepka-loro-piana-indigo",
+    "description": "хлопок 50%; полиэстер 50%\r\nБейсболка с защитой от дождя",
+    "price": "1500.00",
+    "image": "products/лоро_пиана_индиго.jpg",
+    "available": true,
+    "created": "2026-07-29T20:05:51.026Z",
+    "updated": "2026-07-29T20:05:51.026Z",
+    "brand": "",
+    "composition": "",
+    "gender": "U",
+    "color": ""
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 11,
+  "fields": {
+    "category": 1,
+    "name": "Кеды Santoni (Зеленый)",
+    "slug": "kedy-santoni-zelenyj",
+    "description": "Мужской \r\nЭкокожа\r\nКруглогодичный",
+    "price": "4499.00",
+    "image": "products/кеды_сантони_зеленый.jpg",
+    "available": true,
+    "created": "2026-07-29T20:43:05.585Z",
+    "updated": "2026-07-29T20:43:05.585Z",
+    "brand": "",
+    "composition": "",
+    "gender": "U",
+    "color": ""
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 12,
+  "fields": {
+    "category": 3,
+    "name": "Худи Dior (Темно-синий)",
+    "slug": "hudi-dior-temno-sinij",
+    "description": "Представляем мужское худи Dior с капюшоном – воплощение элегантности и комфорта. Изготовлено из высококачественных материалов, оно станет незаменимым элементом вашего гардероба.",
+    "price": "3700.00",
+    "image": "products/zip-hudi-dior-temnosini.jpg",
+    "available": true,
+    "created": "2026-09-14T15:38:17.000Z",
+    "updated": "2026-09-14T15:38:17.000Z",
+    "brand": "Dior",
+    "composition": "хлопок",
+    "gender": "M",
+    "color": "Темно-синий"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 13,
+  "fields": {
+    "category": 3,
+    "name": "Худи Dior (Серый)",
+    "slug": "hudi-dior-seryj",
+    "description": "Представляем мужское худи Dior с капюшоном – воплощение элегантности и комфорта. Изготовлено из высококачественных материалов, оно станет незаменимым элементом вашего гардероба.",
+    "price": "3700.00",
+    "image": "products/zip-hudi-dior-seryi.jpg",
+    "available": true,
+    "created": "2026-09-14T15:40:18.643Z",
+    "updated": "2026-09-14T15:40:18.643Z",
+    "brand": "Dior",
+    "composition": "Хлопок",
+    "gender": "M",
+    "color": "Серый"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 14,
+  "fields": {
+    "category": 3,
+    "name": "Худи Dior (Черный)",
+    "slug": "hudi-dior-chernyj",
+    "description": "Представляем мужское худи Dior с капюшоном – воплощение элегантности и комфорта. Изготовлено из высококачественных материалов, оно станет незаменимым элементом вашего гардероба.",
+    "price": "3700.00",
+    "image": "products/zip-hudi-dior-chernyi.jpg",
+    "available": true,
+    "created": "2026-09-14T15:42:17.453Z",
+    "updated": "2026-09-14T15:42:17.453Z",
+    "brand": "Dior",
+    "composition": "Хлопок",
+    "gender": "M",
+    "color": "Черный"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 15,
+  "fields": {
+    "category": 3,
+    "name": "Худи Armani (Темно-синий)",
+    "slug": "hudi-armani-temno-sinij",
+    "description": "Представляем мужское худи Armani с капюшоном – воплощение элегантности и комфорта. Изготовлено из высококачественных материалов, оно станет незаменимым элементом вашего гардероба.",
+    "price": "4000.00",
+    "image": "products/hudi-armani-temnosinij.jpg",
+    "available": true,
+    "created": "2026-09-14T15:50:33.528Z",
+    "updated": "2026-09-14T15:50:33.529Z",
+    "brand": "Armani",
+    "composition": "Хлопок",
+    "gender": "M",
+    "color": "Темно-синий"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 16,
+  "fields": {
+    "category": 3,
+    "name": "Кардиган Bottino (Серый)",
+    "slug": "kardigan-bottino-seryj",
+    "description": "Популярная трикотажная куртка на осень и зиму.",
+    "price": "3300.00",
+    "image": "products/kardigan-seryi.jpg",
+    "available": true,
+    "created": "2026-09-14T15:54:37.558Z",
+    "updated": "2026-09-14T15:54:37.558Z",
+    "brand": "Bottino",
+    "composition": "акрил 70%; полиэстер 30%",
+    "gender": "M",
+    "color": "Серый"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 17,
+  "fields": {
+    "category": 3,
+    "name": "Кардиган Bottino",
+    "slug": "kardigan-bottino",
+    "description": "Популярная трикотажная куртка на осень и зиму.",
+    "price": "3300.00",
+    "image": "products/kardigan-chernyi.jpg",
+    "available": true,
+    "created": "2026-09-14T15:56:27.064Z",
+    "updated": "2026-09-14T15:56:51.760Z",
+    "brand": "Bottino",
+    "composition": "акрил 70%; полиэстер 30%",
+    "gender": "M",
+    "color": "Черный"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 18,
+  "fields": {
+    "category": 1,
+    "name": "Кросcовки Armani (Черный)",
+    "slug": "kroscovki-armani-chernyj",
+    "description": "Кроссовки Armani Exchange (A|X) созданы для тех, кто ценит вневременной стиль и бескомпромиссный комфорт. Это та самая пара, которая одинаково хорошо смотрится с классическими джинсами, чиносами или спортивными брюками.",
+    "price": "4400.00",
+    "image": "products/kedy-armani-chernyi.jpg",
+    "available": true,
+    "created": "2026-09-14T16:03:06.007Z",
+    "updated": "2026-09-14T16:03:24.669Z",
+    "brand": "Armani",
+    "composition": "замша натуральная; текстиль",
+    "gender": "M",
+    "color": "Черный"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 19,
+  "fields": {
+    "category": 1,
+    "name": "Кроссовки Armani (Белый)",
+    "slug": "krossovki-armani-belyj",
+    "description": "Кроссовки Armani Exchange (A|X) созданы для тех, кто ценит вневременной стиль и бескомпромиссный комфорт. Это та самая пара, которая одинаково хорошо смотрится с классическими джинсами, чиносами или спортивными брюками.",
+    "price": "4400.00",
+    "image": "products/kedy-armani-belyi.jpg",
+    "available": true,
+    "created": "2026-09-14T16:10:16.033Z",
+    "updated": "2026-09-14T16:10:16.034Z",
+    "brand": "Armani",
+    "composition": "замша натуральная; текстиль",
+    "gender": "M",
+    "color": "Белый"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 20,
+  "fields": {
+    "category": 4,
+    "name": "Джинсы (голубой)",
+    "slug": "dzhinsy-goluboj",
+    "description": "Стильные и широкие джинсы трубы должны быть в гардеробе у каждого мужчины. Практичная модель на каждый день - идеальный выбор для стильного образа на любой сезон. Наши темно синие джинсовые штаны прямого кроя из хлопкового денима обеспечивают высокий уровень комфорта и свободы движений. Они имеют универсальную посадку, благодаря чему подойдут на любой тип фигуры и рост. Изделие застёгивается на пуговицу и молнию, оно прочное и износостойкое. Изготовлены с добавлением стрейч, поэтому немного тянуться из-за использования лайкры, что придаёт дополнительную прочность и повышенную износостойкость.",
+    "price": "5500.00",
+    "image": "products/jinsy-golubye.jpg",
+    "available": true,
+    "created": "2026-09-14T18:17:32.664Z",
+    "updated": "2026-09-14T18:17:32.664Z",
+    "brand": "Nata Zar",
+    "composition": "хлопок 80%; полиэстер 15%; Стрейч 5%",
+    "gender": "M",
+    "color": "Голубой"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 21,
+  "fields": {
+    "category": 4,
+    "name": "Джинсы (Темно-синий)",
+    "slug": "dzhinsy-temno-sinij",
+    "description": "Стильные и широкие джинсы трубы должны быть в гардеробе у каждого мужчины. Практичная модель на каждый день - идеальный выбор для стильного образа на любой сезон. Наши темно синие джинсовые штаны прямого кроя из хлопкового денима обеспечивают высокий уровень комфорта и свободы движений. Они имеют универсальную посадку, благодаря чему подойдут на любой тип фигуры и рост. Изделие застёгивается на пуговицу и молнию, оно прочное и износостойкое. Изготовлены с добавлением стрейч, поэтому немного тянуться из-за использования лайкры, что придаёт дополнительную прочность и повышенную износостойкость.",
+    "price": "5500.00",
+    "image": "products/jinsy-temno-sinie1.jpg",
+    "available": true,
+    "created": "2026-09-14T18:20:47.053Z",
+    "updated": "2026-09-14T18:20:47.053Z",
+    "brand": "Nata Zar",
+    "composition": "хлопок 80%; полиэстер 15%; Стрейч 5%",
+    "gender": "M",
+    "color": "Темно-синий"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 22,
+  "fields": {
+    "category": 4,
+    "name": "Джинсы (Темно-синие)",
+    "slug": "dzhinsy-temno-sinie",
+    "description": "Классические стильные джинсы должны быть в гардеробе у каждого мужчины. Практичная модель прямого кроя из хлопкового денима на каждый день, они обеспечивают высокий уровень комфорта и свободы движений. Это идеальный выбор для стильного образа на любой сезон. Благодаря универсальной посадке, подойдут на любой тип фигуры и рост. Изделие застёгивается на пуговицу и молнию, оно прочное и износостойкое. Изготовлены с добавлением стрейч, поэтому немного тянуться из-за использования лайкры, что придаёт дополнительную прочность и повышенную износостойкость. Оснащены качественной фурнитурой, благодаря чему прекрасно подходят для повседневной носки или праздничного мероприятия. Это отличный выбор как для подростков, так и для взрослых мужчин.\r\nУверены, у нас Вы сможете подобрать идеальные для себя джинсы отличного качества.",
+    "price": "5500.00",
+    "image": "products/jinsy-temno-sinie2.jpg",
+    "available": true,
+    "created": "2026-09-14T18:23:25.571Z",
+    "updated": "2026-09-14T18:23:25.571Z",
+    "brand": "Nata Zar",
+    "composition": "Хлопок 98%; Спандекс 2%",
+    "gender": "M",
+    "color": "Темно-синий"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 23,
+  "fields": {
+    "category": 4,
+    "name": "Джинсы (Синий)",
+    "slug": "dzhinsy-sinij",
+    "description": "Классические стильные джинсы должны быть в гардеробе у каждого мужчины. Практичная модель прямого кроя из хлопкового денима на каждый день, они обеспечивают высокий уровень комфорта и свободы движений. Это идеальный выбор для стильного образа на любой сезон. Благодаря универсальной посадке, подойдут на любой тип фигуры и рост. Изделие застёгивается на пуговицу и молнию, оно прочное и износостойкое. Изготовлены с добавлением стрейч, поэтому немного тянуться из-за использования лайкры, что придаёт дополнительную прочность и повышенную износостойкость. Оснащены качественной фурнитурой, благодаря чему прекрасно подходят для повседневной носки или праздничного мероприятия. Это отличный выбор как для подростков, так и для взрослых мужчин.\r\nУверены, у нас Вы сможете подобрать идеальные для себя джинсы отличного качества.",
+    "price": "5500.00",
+    "image": "products/jinsy-golubye1.jpg",
+    "available": true,
+    "created": "2026-09-14T18:26:05.422Z",
+    "updated": "2026-09-14T18:26:05.422Z",
+    "brand": "Nata Zar",
+    "composition": "Хлопок 98%; Спандекс 2%",
+    "gender": "M",
+    "color": "Синий"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 24,
+  "fields": {
+    "category": 4,
+    "name": "Джинсы (Серый)",
+    "slug": "dzhinsy-seryj",
+    "description": "Классические стильные джинсы должны быть в гардеробе у каждого мужчины. Практичная модель прямого кроя из хлопкового денима на каждый день, они обеспечивают высокий уровень комфорта и свободы движений. Это идеальный выбор для стильного образа на любой сезон. Благодаря универсальной посадке, подойдут на любой тип фигуры и рост. Изделие застёгивается на пуговицу и молнию, оно прочное и износостойкое. Изготовлены с добавлением стрейч, поэтому немного тянуться из-за использования спандекса, что придаёт дополнительную прочность и повышенную износостойкость. Оснащены качественной фурнитурой, благодаря чему прекрасно подходят для повседневной носки или праздничного мероприятия. Это отличный выбор как для подростков, так и для взрослых мужчин.\r\nУверены, у нас Вы сможете подобрать идеальные для себя джинсы отличного качества.",
+    "price": "5500.00",
+    "image": "products/jinsy-seryi.jpg",
+    "available": true,
+    "created": "2026-09-14T18:27:51.655Z",
+    "updated": "2026-09-14T18:27:51.655Z",
+    "brand": "Nata Zar",
+    "composition": "Хлопок 98%; Спандекс 2%",
+    "gender": "M",
+    "color": "Серый"
+  }
+},
+{
+  "model": "catalog.review",
+  "pk": 1,
+  "fields": {
+    "product": 10,
+    "user": [
+      "Admin"
+    ],
+    "rating": 5,
+    "text": "топ!!",
+    "created": "2026-09-13T12:23:44.835Z",
+    "updated": "2026-09-13T12:23:44.835Z"
+  }
+},
+{
+  "model": "catalog.review",
+  "pk": 2,
+  "fields": {
+    "product": 11,
+    "user": [
+      "Admin"
+    ],
+    "rating": 5,
+    "text": "",
+    "created": "2026-09-13T18:29:20.961Z",
+    "updated": "2026-09-13T18:29:20.961Z"
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 1,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Горького",
+    "address": "ул. Горького, 58А",
+    "city": "Сочи",
+    "latitude": "43.593355",
+    "longitude": "39.729019",
+    "phone": "+7 (996) 051-81-74",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 2,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Виноградная",
+    "address": "ул. Виноградная, 224/4",
+    "city": "Сочи",
+    "latitude": "43.633148",
+    "longitude": "39.708500",
+    "phone": "+7 (938) 877-08-43",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 3,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Искры",
+    "address": "ул. Искры, 66/9",
+    "city": "Сочи",
+    "latitude": "43.492002",
+    "longitude": "39.902419",
+    "phone": "+7 (988) 404-33-96",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 4,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Курортный",
+    "address": "Курортный проспект, 99 корп. 8",
+    "city": "Сочи",
+    "latitude": "43.553618",
+    "longitude": "39.773035",
+    "phone": "+7 (967) 623-11-05",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 5,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Красноармейская",
+    "address": "ул. Красноармейская, 9Б",
+    "city": "Сочи",
+    "latitude": "43.598107",
+    "longitude": "39.718947",
+    "phone": "+7 (901) 101-09-70",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 6,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Albana",
+    "address": "ул. Нагорная, 11",
+    "city": "Сочи",
+    "latitude": "43.578746",
+    "longitude": "39.728559",
+    "phone": "+7 (800) 201-13-08",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 7,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Макаренко",
+    "address": "ул. Макаренко, 34/18",
+    "city": "Сочи",
+    "latitude": "43.611423",
+    "longitude": "39.740776",
+    "phone": "+7 (988) 231-69-89",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 8,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Центральная",
+    "address": "ул. Центральная, 89",
+    "city": "Сочи",
+    "latitude": "43.798661",
+    "longitude": "39.467353",
+    "phone": "+7 (965) 474-18-18",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 9,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Просвещения",
+    "address": "ул. Просвещения, 166",
+    "city": "Сочи",
+    "latitude": "43.478793",
+    "longitude": "39.892761",
+    "phone": "+7 (938) 875-59-71",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 10,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Яна Фабрициуса",
+    "address": "ул. Яна Фабрициуса, 12/1",
+    "city": "Сочи",
+    "latitude": "43.576243",
+    "longitude": "39.748659",
+    "phone": "+7 (900) 001-65-15",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 11,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Пластунская",
+    "address": "ул. Пластунская, 47а",
+    "city": "Сочи",
+    "latitude": "43.601873",
+    "longitude": "39.733528",
+    "phone": "+7 (862) 555-27-55",
+    "work_time": "Пн-Вс 09:00–20:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 12,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Гагарина",
+    "address": "ул. Гагарина, 23А",
+    "city": "Сочи",
+    "latitude": "43.602382",
+    "longitude": "39.723150",
+    "phone": "+7 (966) 777-37-60",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 13,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Донская",
+    "address": "ул. Донская, 54",
+    "city": "Сочи",
+    "latitude": "43.601000",
+    "longitude": "39.716000",
+    "phone": "+7 (495) 009-04-05",
+    "work_time": "Пн-Вс 08:00–21:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 14,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Волжская",
+    "address": "ул. Волжская, 30",
+    "city": "Сочи",
+    "latitude": "43.632701",
+    "longitude": "39.700332",
+    "phone": "+7 (967) 623-10-90",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 15,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Голубые дали",
+    "address": "ул. Голубые дали, 25",
+    "city": "Сочи",
+    "latitude": "43.451651",
+    "longitude": "39.905964",
+    "phone": "+7 (900) 232-59-09",
+    "work_time": "Пн-Пт 10:00–20:00, Сб-Вс 10:00–18:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.pickuppoint",
+  "pk": 16,
+  "fields": {
+    "carrier": "cdek",
+    "name": "СДЭК Ленина",
+    "address": "ул. Ленина, 298Б",
+    "city": "Сочи",
+    "latitude": "43.485909",
+    "longitude": "39.894276",
+    "phone": "+7 (862) 555-13-40",
+    "work_time": "Пн-Вс 10:00–20:00",
+    "is_active": true
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "first_name": "Валерий",
+    "last_name": "Каракеян",
+    "email": "Electrsochi@mail.ru",
+    "phone": "+79882316327",
+    "address": "ул Донская, д 9",
+    "city": "Сочи",
+    "postal_code": "354068",
+    "created": "2026-08-31T19:59:02.609Z",
+    "updated": "2026-08-31T19:59:02.609Z",
+    "paid": true,
+    "total_price": "8998.00",
+    "pickup_point": null
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "first_name": "Валерий",
+    "last_name": "Каракеян",
+    "email": "Electrsochi@mail.ru",
+    "phone": "+79882316327",
+    "address": "Россия, Сочи, ул. Пластунская 1",
+    "city": "Сочи",
+    "postal_code": "354068",
+    "created": "2026-09-14T18:32:58.581Z",
+    "updated": "2026-09-14T18:32:58.581Z",
+    "paid": false,
+    "total_price": "18898.00",
+    "pickup_point": 11
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 10,
+  "fields": {
+    "order": 10,
+    "product": 11,
+    "price": "4499.00",
+    "quantity": 2
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 11,
+  "fields": {
+    "order": 11,
+    "product": 11,
+    "price": "4499.00",
+    "quantity": 2
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 12,
+  "fields": {
+    "order": 11,
+    "product": 24,
+    "price": "5500.00",
+    "quantity": 1
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 13,
+  "fields": {
+    "order": 11,
+    "product": 19,
+    "price": "4400.00",
+    "quantity": 1
+  }
+},
+{
+  "model": "users.profile",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "avatar": "",
+    "phone": ""
+  }
+},
+{
+  "model": "users.address",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "name": "СДЭК Центральная",
+    "country": "Россия",
+    "city": "Сочи",
+    "street": "ул. Пластунская",
+    "house": "1",
+    "apartment": "",
+    "postal_code": "",
+    "is_default": false,
+    "latitude": "43.601873",
+    "longitude": "39.733528"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Привет",
+    "is_bot": false,
+    "created_at": "2026-08-31T18:54:18.614Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Здравствуйте! Чем я могу вам помочь? Задайте вопрос о товарах, ценах, доставке или возврате.",
+    "is_bot": true,
+    "created_at": "2026-08-31T18:54:18.896Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Цена на товары",
+    "is_bot": false,
+    "created_at": "2026-08-31T18:54:24.246Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Все цены указаны на сайте в карточках товаров. Если не нашли нужный товар, напишите его название, и я помогу найти информацию.",
+    "is_bot": true,
+    "created_at": "2026-08-31T18:54:24.253Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Доставка",
+    "is_bot": false,
+    "created_at": "2026-08-31T18:54:29.473Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Мы доставляем по всей России. Сроки: 2–5 рабочих дней. Стоимость доставки рассчитывается автоматически при оформлении заказа.",
+    "is_bot": true,
+    "created_at": "2026-08-31T18:54:29.480Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Возврат",
+    "is_bot": false,
+    "created_at": "2026-08-31T18:54:35.429Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Вы можете вернуть товар в течение 14 дней с момента получения. Подробные условия на странице \"Возврат\" внизу сайта.",
+    "is_bot": true,
+    "created_at": "2026-08-31T18:54:35.435Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Скидки и акции",
+    "is_bot": false,
+    "created_at": "2026-08-31T18:54:40.213Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Я ещё учусь, но постараюсь помочь. Попробуйте спросить о ценах, доставке или возврате товара.",
+    "is_bot": true,
+    "created_at": "2026-08-31T18:54:40.220Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Как оформить заказ?",
+    "is_bot": false,
+    "created_at": "2026-08-31T18:54:41.788Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 12,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Интересный вопрос! Чтобы получить точный ответ, обратитесь к нашему менеджеру. Но я могу подсказать по основным темам: цены, доставка, возврат.",
+    "is_bot": true,
+    "created_at": "2026-08-31T18:54:41.795Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 13,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Способы оплаты",
+    "is_bot": false,
+    "created_at": "2026-08-31T18:54:43.186Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 14,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Интересный вопрос! Чтобы получить точный ответ, обратитесь к нашему менеджеру. Но я могу подсказать по основным темам: цены, доставка, возврат.",
+    "is_bot": true,
+    "created_at": "2026-08-31T18:54:43.192Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 15,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "ку",
+    "is_bot": false,
+    "created_at": "2026-08-31T18:54:48.019Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 16,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Интересный вопрос! Чтобы получить точный ответ, обратитесь к нашему менеджеру. Но я могу подсказать по основным темам: цены, доставка, возврат.",
+    "is_bot": true,
+    "created_at": "2026-08-31T18:54:48.026Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 17,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Способы оплаты",
+    "is_bot": false,
+    "created_at": "2026-08-31T20:07:32.128Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 18,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Спасибо за ваш вопрос! Наш специалист свяжется с вами в ближайшее время. А пока вы можете уточнить информацию о ценах, доставке или возврате.",
+    "is_bot": true,
+    "created_at": "2026-08-31T20:07:32.145Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 19,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Способы оплаты",
+    "is_bot": false,
+    "created_at": "2026-08-31T20:07:37.253Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 20,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Интересный вопрос! Чтобы получить точный ответ, обратитесь к нашему менеджеру. Но я могу подсказать по основным темам: цены, доставка, возврат.",
+    "is_bot": true,
+    "created_at": "2026-08-31T20:07:37.259Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 21,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Привет",
+    "is_bot": false,
+    "created_at": "2026-08-31T20:07:43.550Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 22,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Здравствуйте! Чем я могу вам помочь? Задайте вопрос о товарах, ценах, доставке или возврате.",
+    "is_bot": true,
+    "created_at": "2026-08-31T20:07:43.556Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 23,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Способы оплаты",
+    "is_bot": false,
+    "created_at": "2026-08-31T20:07:47.129Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 24,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Спасибо за ваш вопрос! Наш специалист свяжется с вами в ближайшее время. А пока вы можете уточнить информацию о ценах, доставке или возврате.",
+    "is_bot": true,
+    "created_at": "2026-08-31T20:07:47.135Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 25,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Как оформить заказ?",
+    "is_bot": false,
+    "created_at": "2026-08-31T20:07:50.324Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 26,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Интересный вопрос! Чтобы получить точный ответ, обратитесь к нашему менеджеру. Но я могу подсказать по основным темам: цены, доставка, возврат.",
+    "is_bot": true,
+    "created_at": "2026-08-31T20:07:50.330Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 27,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Скидки и акции",
+    "is_bot": false,
+    "created_at": "2026-08-31T20:07:53.746Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 28,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Я ещё учусь, но постараюсь помочь. Попробуйте спросить о ценах, доставке или возврате товара.",
+    "is_bot": true,
+    "created_at": "2026-08-31T20:07:53.752Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 29,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Цена на товары",
+    "is_bot": false,
+    "created_at": "2026-08-31T20:07:56.184Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 30,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Все цены указаны на сайте в карточках товаров. Если не нашли нужный товар, напишите его название, и я помогу найти информацию.",
+    "is_bot": true,
+    "created_at": "2026-08-31T20:07:56.190Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 31,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Доставка",
+    "is_bot": false,
+    "created_at": "2026-08-31T20:07:58.343Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 32,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Мы доставляем по всей России. Сроки: 2–5 рабочих дней. Стоимость доставки рассчитывается автоматически при оформлении заказа.",
+    "is_bot": true,
+    "created_at": "2026-08-31T20:07:58.351Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 33,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Привет",
+    "is_bot": false,
+    "created_at": "2026-09-03T14:55:36.602Z"
+  }
+},
+{
+  "model": "users.chatmessage",
+  "pk": 34,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "message": "Здравствуйте! Чем я могу вам помочь? Задайте вопрос о товарах, ценах, доставке или возврате.",
+    "is_bot": true,
+    "created_at": "2026-09-03T14:55:36.622Z"
+  }
+},
+{
+  "model": "wishlist.wishlistitem",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "product": 11,
+    "added_at": "2026-08-31T20:00:32.092Z"
+  }
+}
+]
