@@ -18,18 +18,22 @@ def main():
         ) from exc
 
     # === АВТОМАТИЧЕСКИЕ ДЕЙСТВИЯ ПРИ ЗАПУСКЕ runserver ===
-    # Нужно для серверов, у которых нет возможности выполнить консольные команды.
     if len(sys.argv) > 1 and sys.argv[1] == 'runserver':
-        from django.core.management import call_command
-        from django.db import connection
+        # 1. Инициализируем Django (без этого apps не загружены)
+        import django
+        django.setup()
 
-        # 1. Применяем миграции
+        from django.core.management import call_command
+
+        # 2. Применяем миграции
         try:
+            print('[auto] Applying migrations...')
             call_command('migrate', interactive=False, verbosity=1)
+            print('[auto] Migrations OK')
         except Exception as e:
             print(f'[auto-migrate] Ошибка: {e}')
 
-        # 2. Создаём суперпользователя, если его нет
+        # 3. Создаём суперпользователя
         try:
             from django.contrib.auth import get_user_model
             User = get_user_model()
@@ -38,16 +42,17 @@ def main():
             email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@example.com')
             if not User.objects.filter(username=username).exists():
                 User.objects.create_superuser(username=username, email=email, password=password)
-                print(f'[auto-superuser] Создан {username}')
+                print(f'[auto] Создан суперпользователь {username}')
             else:
-                print(f'[auto-superuser] {username} уже существует')
+                print(f'[auto] {username} уже существует')
         except Exception as e:
             print(f'[auto-superuser] Ошибка: {e}')
 
-        # 3. Собираем статику
+        # 4. Собираем статику
         try:
+            print('[auto] Collecting static...')
             call_command('collectstatic', interactive=False, verbosity=0)
-            print('[auto-static] Статика собрана')
+            print('[auto] Static OK')
         except Exception as e:
             print(f'[auto-static] Ошибка: {e}')
 
