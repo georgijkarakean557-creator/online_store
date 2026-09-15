@@ -1,10 +1,11 @@
 """
 Django settings for core project.
 
-Настройки работают и локально (SQLite), и на сервере Amvera (PostgreSQL через DATABASE_URL).
+Настройки работают и локально (SQLite), и на RelaxDev (PostgreSQL).
 """
 
 import os
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 import dj_database_url
 from pathlib import Path
 
@@ -22,7 +23,7 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://*.amvera.io',
+    'https://*.relaxdev.ru',
     'http://127.0.0.1:8000',
     'http://localhost:8000',
 ]
@@ -50,7 +51,7 @@ INSTALLED_APPS = [
 # ===== MIDDLEWARE =====
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',   # <-- для раздачи статики на сервере
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,15 +82,28 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # ===== БАЗА ДАННЫХ =====
-# Если есть DATABASE_URL (Amvera) — используем PostgreSQL.
-# Если нет (локально) — используем SQLite.
+# RelaxDev добавляет в DATABASE_URL параметры Node.js (connection_limit, pool_timeout),
+# которые psycopg2 не понимает — их надо вырезать.
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
+_db_url = os.environ.get('DATABASE_URL', '')
 
-if DATABASE_URL:
+if _db_url:
+    parsed = urlparse(_db_url)
+    query_params = parse_qs(parsed.query)
+
+    for param in [
+        'connection_limit', 'pool_timeout', 'sslmode', 'ssl',
+        'channel_binding', 'pgbouncer', 'statement_cache_size',
+        'application_name',
+    ]:
+        query_params.pop(param, None)
+
+    new_query = urlencode(query_params, doseq=True)
+    cleaned_url = urlunparse(parsed._replace(query=new_query))
+
     DATABASES = {
         'default': dj_database_url.parse(
-            DATABASE_URL,
+            cleaned_url,
             conn_max_age=600,
             ssl_require=False,
         )
