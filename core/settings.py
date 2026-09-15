@@ -1,7 +1,7 @@
 """
 Django settings for core project.
 
-Настройки работают и локально (SQLite), и на RelaxDev (PostgreSQL).
+Работает и локально (SQLite), и на RelaxDev (PostgreSQL через DATABASE_URL).
 """
 
 import os
@@ -82,9 +82,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # ===== БАЗА ДАННЫХ =====
-# RelaxDev добавляет в DATABASE_URL параметры Node.js (connection_limit, pool_timeout),
-# которые psycopg2 не понимает — их надо вырезать.
-
 _db_url = os.environ.get('DATABASE_URL', '')
 
 if _db_url:
@@ -133,11 +130,15 @@ USE_I18N = True
 USE_TZ = True
 
 
-# ===== СТАТИКА И МЕДИА =====
+# ===== СТАТИКА =====
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+
+# ===== МЕДИА =====
+# Картинки товаров и аватары. Раздаём через отдельный URL /media/.
+# Раздача настраивается в core/urls.py.
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

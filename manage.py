@@ -47,7 +47,7 @@ def main():
         except Exception as e:
             print(f'[auto-superuser] Ошибка: {e}')
 
-        # 3. Загрузка data.json с очисткой старых данных
+        # 3. Загрузка data.json
         try:
             from catalog.models import Product, Category, Review
             from orders.models import Order, OrderItem, PickupPoint
@@ -56,7 +56,6 @@ def main():
             if os.path.exists('data.json'):
                 print(f'[auto] Товаров в базе ДО загрузки: {Product.objects.count()}')
 
-                # Всегда очищаем и загружаем заново
                 print('[auto] Очищаю старые каталог/заказы/избранное...')
                 WishlistItem.objects.all().delete()
                 OrderItem.objects.all().delete()
@@ -74,7 +73,7 @@ def main():
         except Exception as e:
             print(f'[auto-loaddata] Ошибка: {e}')
 
-        # 4. Статика
+        # 4. Статика (media не трогаем — она раздаётся отдельно)
         try:
             print('[auto] Collecting static...')
             call_command('collectstatic', interactive=False, verbosity=0)
