@@ -47,15 +47,30 @@ def main():
         except Exception as e:
             print(f'[auto-superuser] Ошибка: {e}')
 
-        # 3. Загрузка данных из data.json (если есть товары не загружены)
+        # 3. Загрузка data.json с очисткой старых данных
         try:
-            from catalog.models import Product
-            if Product.objects.count() == 0 and os.path.exists('data.json'):
+            from catalog.models import Product, Category, Review
+            from orders.models import Order, OrderItem, PickupPoint
+            from wishlist.models import WishlistItem
+
+            if os.path.exists('data.json'):
+                print(f'[auto] Товаров в базе ДО загрузки: {Product.objects.count()}')
+
+                # Всегда очищаем и загружаем заново
+                print('[auto] Очищаю старые каталог/заказы/избранное...')
+                WishlistItem.objects.all().delete()
+                OrderItem.objects.all().delete()
+                Order.objects.all().delete()
+                Review.objects.all().delete()
+                Product.objects.all().delete()
+                Category.objects.all().delete()
+                PickupPoint.objects.all().delete()
+
                 print('[auto] Загружаю data.json...')
                 call_command('loaddata', 'data.json', verbosity=1)
-                print(f'[auto] Данные загружены. Товаров: {Product.objects.count()}')
+                print(f'[auto] Товаров ПОСЛЕ загрузки: {Product.objects.count()}')
             else:
-                print(f'[auto] Товаров уже в базе: {Product.objects.count()}')
+                print('[auto] data.json не найден')
         except Exception as e:
             print(f'[auto-loaddata] Ошибка: {e}')
 
