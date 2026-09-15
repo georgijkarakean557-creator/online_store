@@ -420,34 +420,6 @@
   }
 },
 {
-  "model": "catalog.review",
-  "pk": 1,
-  "fields": {
-    "product": 10,
-    "user": [
-      "Admin"
-    ],
-    "rating": 5,
-    "text": "топ!!",
-    "created": "2026-09-13T12:23:44.835Z",
-    "updated": "2026-09-13T12:23:44.835Z"
-  }
-},
-{
-  "model": "catalog.review",
-  "pk": 2,
-  "fields": {
-    "product": 11,
-    "user": [
-      "Admin"
-    ],
-    "rating": 5,
-    "text": "",
-    "created": "2026-09-13T18:29:20.961Z",
-    "updated": "2026-09-13T18:29:20.961Z"
-  }
-},
-{
   "model": "orders.pickuppoint",
   "pk": 1,
   "fields": {
@@ -685,99 +657,6 @@
     "phone": "+7 (862) 555-13-40",
     "work_time": "Пн-Вс 10:00–20:00",
     "is_active": true
-  }
-},
-{
-  "model": "orders.order",
-  "pk": 10,
-  "fields": {
-    "user": [
-      "Admin"
-    ],
-    "first_name": "Валерий",
-    "last_name": "Каракеян",
-    "email": "Electrsochi@mail.ru",
-    "phone": "+79882316327",
-    "address": "ул Донская, д 9",
-    "city": "Сочи",
-    "postal_code": "354068",
-    "created": "2026-08-31T19:59:02.609Z",
-    "updated": "2026-08-31T19:59:02.609Z",
-    "paid": true,
-    "total_price": "8998.00",
-    "pickup_point": null
-  }
-},
-{
-  "model": "orders.order",
-  "pk": 11,
-  "fields": {
-    "user": [
-      "Admin"
-    ],
-    "first_name": "Валерий",
-    "last_name": "Каракеян",
-    "email": "Electrsochi@mail.ru",
-    "phone": "+79882316327",
-    "address": "Россия, Сочи, ул. Пластунская 1",
-    "city": "Сочи",
-    "postal_code": "354068",
-    "created": "2026-09-14T18:32:58.581Z",
-    "updated": "2026-09-14T18:32:58.581Z",
-    "paid": false,
-    "total_price": "18898.00",
-    "pickup_point": 11
-  }
-},
-{
-  "model": "orders.orderitem",
-  "pk": 10,
-  "fields": {
-    "order": 10,
-    "product": 11,
-    "price": "4499.00",
-    "quantity": 2
-  }
-},
-{
-  "model": "orders.orderitem",
-  "pk": 11,
-  "fields": {
-    "order": 11,
-    "product": 11,
-    "price": "4499.00",
-    "quantity": 2
-  }
-},
-{
-  "model": "orders.orderitem",
-  "pk": 12,
-  "fields": {
-    "order": 11,
-    "product": 24,
-    "price": "5500.00",
-    "quantity": 1
-  }
-},
-{
-  "model": "orders.orderitem",
-  "pk": 13,
-  "fields": {
-    "order": 11,
-    "product": 19,
-    "price": "4400.00",
-    "quantity": 1
-  }
-},
-{
-  "model": "wishlist.wishlistitem",
-  "pk": 9,
-  "fields": {
-    "user": [
-      "Admin"
-    ],
-    "product": 11,
-    "added_at": "2026-08-31T20:00:32.092Z"
   }
 }
 ]
